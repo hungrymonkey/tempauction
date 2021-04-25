@@ -20,6 +20,7 @@ CreateIndex({
   name: "all_auctions",
   source: Collection("auction")
 })
+
 ```
 ### Auction_name
 ```
@@ -30,10 +31,16 @@ CreateIndex({
   unique: true
 })
 CreateIndex({
-  name:   "bid_by_amount",
+  name: "bid_by_auction",
   source: Collection("bid"),
-  terms:  [{ field: [ "data", "amount" ] }],
+  terms:  [{ field: [ "data", "auction" ] }]
 })
+CreateIndex({
+  name: "bid_by_timestamp",
+  source: Collection("bid"),
+  terms:  [{ field: [ "data", "timestamp" ] }]
+})
+
 ```
 ### Insert
 ```
@@ -83,6 +90,14 @@ Create(
   }
 )
 ```
+### Update
+1. Update by ref id
+```
+Update( Ref(Collection("bid"), '296247780316283405'),
+  { data: { auction: "dummy" }});
+```
+https://docs.fauna.com/fauna/current/tutorials/crud?lang=javascript
+
 ### Query
 1. Get all auctions
 ```
@@ -102,4 +117,35 @@ Map(
   Lambda("X", Get(Var("X")))
 )
 ```
+3. Get all bids in an auction
+```
+Map(
+  Paginate(
+    Join(
+      Match(Index("auction_by_name"), "dummy"),
+      Index("all_bids")
+    )
+  ),
+  Lambda("X", Get(Var("X")))
+)
+```
+4. Sorted by amount
+```
+CreateIndex({
+  name: "bid_by_amount_desc",
+  source: Collection("bid"),
+  terms: [
+    { field: ["ref"] }
+  ],
+  values:  [
+    { field: [ "data", "amount" ], reverse: true },
+    { field: [ "data", "auction" ] },
+    { field: [ "ref" ] },
+    { field: [ "data", "timestamp" ] },
+    { field: [ "data", "email" ] },
+    { field: [ "data", "name" ] }
+  ]
+})
 
+Paginate(Match(Index("bid_by_amount_desc")))
+```
