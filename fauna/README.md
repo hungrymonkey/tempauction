@@ -263,18 +263,12 @@ Map(
 CreateIndex({
   name: "bid_by_amount_desc",
   source: Collection("bid"),
-  terms: [
-    { field: ["ref"] }
-  ],
   values:  [
     { field: [ "data", "amount" ], reverse: true },
-    { field: [ "data", "auction" ] },
+    { field: [ "data", "auctionRef" ] },
     { field: [ "ref" ] },
-    { field: [ "data", "timestamp" ] },
-    { field: [ "data", "email" ] },
-    { field: [ "data", "name" ] }
   ]
 })
 
-Paginate(Match(Index("bid_by_amount_desc")))
+Paginate(Index("bid_by_amount_desc"))
 ```
