@@ -31,9 +31,9 @@ CreateIndex({
   unique: true
 })
 CreateIndex({
-  name: "bid_by_auction",
+  name: "bid_by_auctionRef",
   source: Collection("bid"),
-  terms:  [{ field: [ "data", "auction" ] }]
+  terms:  [{ field: [ "data", "auctionRef" ] }]
 })
 CreateIndex({
   name: "bid_by_timestamp",
@@ -61,7 +61,7 @@ Create(
       "name": "dummy",
       "amount": 100,
       "timestamp": Now(),
-      "auction": Get(Match(Index("auction_by_name"), "dummy"))
+      "auctionRef": Select( "ref", Get(Match(Index("auction_by_name"), "dummy")))
     }
   }
 )
@@ -73,7 +73,7 @@ Create(
       "name": "dummy2",
       "amount": 200,
       "timestamp": Now(),
-      "auction": Get(Match(Index("auction_by_name"), "dummy"))
+      "auctionRef": Select( "ref", Get(Match(Index("auction_by_name"), "dummy")))
     }
   }
 )
@@ -85,7 +85,7 @@ Create(
       "name": "dummy3",
       "amount": 300,
       "timestamp": Now(),
-      "auction": Get(Match(Index("auction_by_name"), "dummy"))
+      "auction": Select( "ref", Get(Match(Index("auction_by_name"), "dummy")))
     }
   }
 )
@@ -112,7 +112,7 @@ Map(
 ```
 Map(
   Paginate(
-    Match(Index("all_bids"))
+      Match(Index("all_bids")),
   ),
   Lambda("X", Get(Var("X")))
 )
@@ -122,9 +122,9 @@ Map(
 Map(
   Paginate(
     Join(
-      Match(Index("auction_by_name"), "dummy"),
-      Index("all_bids")
-    )
+        Match(Index("auction_by_name"), "dummy"),
+        Index("bid_by_auctionRef")
+    ),
   ),
   Lambda("X", Get(Var("X")))
 )
