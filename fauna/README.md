@@ -137,7 +137,7 @@ Map(
 
 4. Get all bids in an auction with auction_end
 
-```json
+```
 Map(
   Paginate(
     Join(
@@ -200,7 +200,7 @@ Map(
 }
 ```
 
-```json
+```
 Map(
   Paginate(
     Join(
@@ -258,9 +258,9 @@ Map(
 }
 ```
 
-4. Sorted by amount
+5. Sorted by amount
 
-```json
+```
 CreateIndex({
   name: "bid_by_amount_desc",
   source: Collection("bid"),
@@ -270,9 +270,7 @@ CreateIndex({
     { field: [ "ref" ] },
   ]
 })
-```
 
-```json
 Map(
   Paginate(Match(Index("bid_by_amount_desc"))),
   Lambda(
@@ -284,6 +282,8 @@ Map(
     )
   )
 );
+```
+```
 {
   data: [
     {
@@ -310,6 +310,44 @@ Map(
       },
       ts: 1619312503760000,
       ref: Ref(Collection("bid"), "296803268032463368"),
+      auction_end: 1619247411
+    }
+  ]
+}
+```
+6. Max Bid
+
+```
+Map(
+  Max(Paginate(Match(Index("bid_by_amount_desc")))),
+  Lambda(
+    "X", 
+    Let({
+      auctionRef: Select(1, Var("X")), bidRef: Select(2, Var("X"))
+      },
+      Merge(Get(Var("bidRef")), Select(["data"], Get(Var("auctionRef"))))
+    )
+  )
+)
+```
+### According to the Docs
+FQL compares numbers first then references
+https://docs.fauna.com/fauna/current/api/fql/functions/max?lang=go
+
+```json
+{
+  data: [
+    {
+      name: "dummy",
+      data: {
+        email: "dummy3@example.com",
+        name: "dummy3",
+        amount: 300,
+        timestamp: Time("2021-04-25T03:04:08.263530Z"),
+        auctionRef: Ref(Collection("auction"), "296247615765348877")
+      },
+      ts: 1619319848350000,
+      ref: Ref(Collection("bid"), "296810969400607245"),
       auction_end: 1619247411
     }
   ]
