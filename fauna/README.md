@@ -31,9 +31,9 @@ CreateIndex({
   unique: true
 })
 CreateIndex({
-  name: "bid_by_auction",
+  name: "bid_by_auctionRef",
   source: Collection("bid"),
-  terms:  [{ field: [ "data", "auction" ] }]
+  terms:  [{ field: [ "data", "auctionRef" ] }]
 })
 CreateIndex({
   name: "bid_by_timestamp",
@@ -61,7 +61,7 @@ Create(
       "name": "dummy",
       "amount": 100,
       "timestamp": Now(),
-      "auction": Get(Match(Index("auction_by_name"), "dummy"))
+      "auctionRef": Select( "ref", Get(Match(Index("auction_by_name"), "dummy")))
     }
   }
 )
@@ -73,7 +73,7 @@ Create(
       "name": "dummy2",
       "amount": 200,
       "timestamp": Now(),
-      "auction": Get(Match(Index("auction_by_name"), "dummy"))
+      "auctionRef": Select( "ref", Get(Match(Index("auction_by_name"), "dummy")))
     }
   }
 )
@@ -85,7 +85,7 @@ Create(
       "name": "dummy3",
       "amount": 300,
       "timestamp": Now(),
-      "auction": Get(Match(Index("auction_by_name"), "dummy"))
+      "auction": Select( "ref", Get(Match(Index("auction_by_name"), "dummy")))
     }
   }
 )
@@ -100,6 +100,7 @@ https://docs.fauna.com/fauna/current/tutorials/crud?lang=javascript
 
 ### Query
 1. Get all auctions
+
 ```
 Map(
   Paginate(
@@ -108,27 +109,155 @@ Map(
   Lambda("X", Get(Var("X")))
 )
 ```
+
 2. Get all bids
+
 ```
 Map(
   Paginate(
-    Match(Index("all_bids"))
+      Match(Index("all_bids")),
   ),
   Lambda("X", Get(Var("X")))
 )
 ```
+
 3. Get all bids in an auction
+
 ```
 Map(
   Paginate(
     Join(
-      Match(Index("auction_by_name"), "dummy"),
-      Index("all_bids")
-    )
+        Match(Index("auction_by_name"), "dummy"),
+        Index("bid_by_auctionRef")
+    ),
   ),
   Lambda("X", Get(Var("X")))
 )
 ```
+
+4. Get all bids in an auction with auction_end
+
+```json
+Map(
+  Paginate(
+    Join(
+        Match(Index("auction_by_name"), "dummy"),
+        Index("bid_by_auctionRef")
+    ),
+  ),
+  Lambda("X",
+    Let({
+        auction: Select( "ref", Get(Match(Index("auction_by_name"), "dummy"))),
+        bid:  Get(Var("X"))
+    },
+    Merge(Var('bid'), { auction: Get(Var("auction"))}))
+  )
+)
+```
+
+```json
+{
+  data: [
+    {
+      ref: Ref(Collection("bid"), "296803255821795848"),
+      ts: 1619312492120000,
+      data: {
+        email: "dummy@example.com",
+        name: "dummy",
+        amount: 100,
+        timestamp: Time("2021-04-25T01:01:32.023397Z"),
+        auctionRef: Ref(Collection("auction"), "296247615765348877")
+      },
+      auction: {
+        ref: Ref(Collection("auction"), "296247615765348877"),
+        ts: 1618782592477000,
+        data: {
+          name: "dummy",
+          auction_end: 1619247411
+        }
+      }
+    },
+    {
+      ref: Ref(Collection("bid"), "296803268032463368"),
+      ts: 1619312503760000,
+      data: {
+        email: "dummy2@example.com",
+        name: "dummy2",
+        amount: 200,
+        timestamp: Time("2021-04-25T01:01:43.665543Z"),
+        auctionRef: Ref(Collection("auction"), "296247615765348877")
+      },
+      auction: {
+        ref: Ref(Collection("auction"), "296247615765348877"),
+        ts: 1618782592477000,
+        data: {
+          name: "dummy",
+          auction_end: 1619247411
+        }
+      }
+    }
+  ]
+}
+```
+
+```json
+Map(
+  Paginate(
+    Join(
+        Match(Index("auction_by_name"), "dummy"),
+        Index("bid_by_auctionRef")
+    ),
+  ),
+  Lambda("X",
+    Let({
+        auction: Select( "ref", Get(Match(Index("auction_by_name"), "dummy"))),
+        bid:  Select(["data"], Get(Var("X"))),
+        bidts: Select("ts", Get(Var("X")))
+    },
+    Merge(Merge(Var('bid'), { auction: Get(Var("auction"))}), {ts: Var("bidts")}))
+  )
+)
+```
+
+```json
+{
+  data: [
+    {
+      name: "dummy",
+      timestamp: Time("2021-04-25T01:01:32.023397Z"),
+      email: "dummy@example.com",
+      auction: {
+        ref: Ref(Collection("auction"), "296247615765348877"),
+        ts: 1618782592477000,
+        data: {
+          name: "dummy",
+          auction_end: 1619247411
+        }
+      },
+      auctionRef: Ref(Collection("auction"), "296247615765348877"),
+      ts: 1619312492120000,
+      amount: 100
+    },
+    {
+      name: "dummy2",
+      timestamp: Time("2021-04-25T01:01:43.665543Z"),
+      email: "dummy2@example.com",
+      auction: {
+        ref: Ref(Collection("auction"), "296247615765348877"),
+        ts: 1618782592477000,
+        data: {
+          name: "dummy",
+          auction_end: 1619247411
+        }
+      },
+      auctionRef: Ref(Collection("auction"), "296247615765348877"),
+      ts: 1619312503760000,
+      amount: 200
+    }
+  ]
+}
+```
+
 4. Sorted by amount
 ```
 CreateIndex({
