@@ -19,6 +19,12 @@ Further documentation for Wrangler can be found [here](https://developers.cloudf
 wranger dev
 ```
 
+```
+curl -X POST -d "taco=bill" http://127.0.0.1:8787/getmaxbid
+curl -X POST -d "auction=dummy" http://127.0.0.1:8787/getmaxbid
+curl -X POST -d "auction=invaliddummy" http://127.0.0.1:8787/getmaxbid
+```
+
 #### Key requirements
 
 ```bash
