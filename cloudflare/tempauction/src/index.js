@@ -4,7 +4,7 @@ import faunadb from 'faunadb';
 import {customFetch, getFaunaError} from './utils.js';
 
 import { handleGetMaxBid } from './post/handleGetMaxBid.js';
-
+import { handleGetAllBids } from './post/handleGetAllBids.js';
 
 const faunaClient = new faunadb.Client({
   secret: FAUNA_SECRET,
@@ -36,6 +36,7 @@ async function handleRequest(request) {
   // Replace with the appropriate paths and handlers
   r.get('.*/bar', () => new Response('responding for /bar'))
   r.get('.*/foo', request => handler(request))
+  r.post('.*/getallbids', request => handleGetAllBids(request, faunaClient))
   r.post('.*/getmaxbid', request => handleGetMaxBid(request, faunaClient))
   r.get('/', () => new Response('Hello worker!')) // return a default message for the root route
 
