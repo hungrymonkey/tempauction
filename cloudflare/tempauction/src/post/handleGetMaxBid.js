@@ -1,7 +1,7 @@
 
 import { handlePostBody } from './handlePostBody.js'
 import faunadb from 'faunadb';
-const {Match, Index, Get, Map, Max, Paginate, Filter, Equals, Select, Let, Var} = faunadb.query;
+const {Equals,  Filter, Get, Index, Lambda, Let,  Map, Match, Max, Merge, Paginate, Select, Var} = faunadb.query;
 
 export async function handleGetMaxBid(request, fqlClient) {
 	const { headers } = request;
@@ -11,7 +11,6 @@ export async function handleGetMaxBid(request, fqlClient) {
 	}
 	if (contentType.includes("application/json") || contentType.includes("form")) {
 		var args = await handlePostBody(request);
-		console.log(JSON.stringify(args))
 	} else {
 		let body = JSON.stringify({
 			contentType: headers.get("content-type"), 
@@ -23,29 +22,46 @@ export async function handleGetMaxBid(request, fqlClient) {
 		return new Response(body, init)
 	}
 	if ( args.hasOwnProperty('auction') ) {
-		const results = await fqlClient.query(
-			Map(
-				Max(
-				  Filter(
-					Paginate(Match(Index("bid_by_amount_desc"))),
-					Lambda("Y", 
-					  Let({ auctionRef: Select(1, Var("Y"))},
-						Equals(Select(["data", "name"], Get(Var("auctionRef"))), argMap.get("auction"))
-					  )
-				  )
-				)),
-				Lambda(
-				  "X", 
-				  Let({
-					auctionRef: Select(1, Var("X")), bidRef: Select(2, Var("X"))
-					},
-					Merge(Get(Var("bidRef")), Select(["data"], Get(Var("auctionRef"))))
-				  )
+		try {
+			let results = await fqlClient.query(
+				Map(
+					Max(
+					Filter(
+						Paginate(Match(Index("bid_by_amount_desc"))),
+						Lambda("Y", 
+						Let({ auctionRef: Select(1, Var("Y"))},
+							Equals(Select(["data", "name"], Get(Var("auctionRef"))), args["auction"])
+						)
+					)
+					)),
+					Lambda(
+					"X", Let({
+							auction: Get(Select(1, Var("X"))), bid: Get(Select(2, Var("X")))
+						},
+						Merge(
+							Merge(Select(["data"], Var("bid")), {"ts": Select("ts", Var("bid"))}),
+							Merge( 
+								{"auction_end": Select(["data", "auction_end"], Var("auction")) },
+								{"auction_name": Select(["data", "name"], Var("auction")) }
+							),
+						)
+					)
+					)
 				)
 			)
-		)
+			var body = JSON.stringify({result: results["data"][0]});
+		} catch (exception) {
+			console.log(exception)
+			var body = JSON.stringify({
+				contentType: headers.get("content-type"), 
+				error_message: "auction not found",
+				error_code: 102,
+				endpoint: "getmaxbid",
+				arguments: args
+			})
+			return new Response(body, init)
+		}
 		//var result = "TODO";
-		var body = JSON.stringify({result: results});
 	} else {
 		var body = JSON.stringify({
 			contentType: headers.get("content-type"), 
