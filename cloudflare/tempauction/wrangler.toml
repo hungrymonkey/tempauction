@@ -1,6 +1,7 @@
 name = "tempauction"
-type = "javascript"
+type = "webpack"
 
+webpack_config = "webpack.config.js"
 account_id = "645c9b337a377d4dd6c60fc80f4ca559"
 workers_dev = true
 route = ""
