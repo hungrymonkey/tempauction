@@ -1,0 +1,7 @@
+name = "tempauction"
+type = "javascript"
+
+account_id = "645c9b337a377d4dd6c60fc80f4ca559"
+workers_dev = true
+route = ""
+zone_id = ""
