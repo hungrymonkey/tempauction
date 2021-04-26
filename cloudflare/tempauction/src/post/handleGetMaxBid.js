@@ -1,7 +1,7 @@
 
 import { handlePostBody } from './handlePostBody.js'
 import faunadb from 'faunadb';
-const {Match, Index, Get, Map, Max, Paginate, Filter, Equals, Select, Let, Var} = faunadb.query;
+const {Match, Index, Get, Map, Max, Paginate, Lambda, Filter, Equals, Select, Let, Var} = faunadb.query;
 
 export async function handleGetMaxBid(request, fqlClient) {
 	const { headers } = request;
@@ -30,7 +30,7 @@ export async function handleGetMaxBid(request, fqlClient) {
 					Paginate(Match(Index("bid_by_amount_desc"))),
 					Lambda("Y", 
 					  Let({ auctionRef: Select(1, Var("Y"))},
-						Equals(Select(["data", "name"], Get(Var("auctionRef"))), argMap.get("auction"))
+						Equals(Select(["data", "name"], Get(Var("auctionRef"))), args["auction"])
 					  )
 				  )
 				)),
