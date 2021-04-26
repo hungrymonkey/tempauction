@@ -8,6 +8,9 @@ module.exports = {
 		extensions: ['.ts', '.tsx', '.js'],
 		plugins: []
 	},
+	optimization: {
+		minimize: false,
+	  },
 	output: {
 		path: __dirname + "/dist",
 		publicPath: "dist",
