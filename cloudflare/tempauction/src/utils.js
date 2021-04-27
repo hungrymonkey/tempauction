@@ -34,3 +34,16 @@ export function getFaunaError (error) {
   }
   return {code, description, status};
 }
+//TODO: Needs to be zeropadded
+export function dateToUTC(dateObj) {
+  let y = dateObj.getUTCFullYear();
+  let m = dateObj.getUTCMonth().toFixed(2);
+  let d = dateObj.getUTCDay().toFixed(2);
+  let h = dateObj.getUTCHours().toFixed(2);
+  let m = dateObj.getUTCMinutes().toFixed(2);
+  let s = dateObj.getUTCSeconds().toFixed(2);
+  return `${y}-${m}-${d}T${h}:${m}:${s}Z`;
+}
+export function UTCtoDate(utcString) {
+  return Date.parse(utcString);
+}
