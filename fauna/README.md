@@ -352,4 +352,50 @@ https://docs.fauna.com/fauna/current/api/fql/functions/max?lang=go
     }
   ]
 }
+``
+7 Create Bid ACID
+```
+Let(
+  {
+    maxBid: Max(
+      Filter(
+        Paginate(Match(Index("bid_by_amount_desc"))),
+        Lambda(
+          "Y",
+          Let(
+            { auctionRef: Select(1, Var("Y")) },
+            Equals(Select(["data", "name"], Get(Var("auctionRef"))), "dummy")
+          )
+        )
+      )
+    )
+  },
+  Let(
+    {
+      amount: Select(["data", 0, 0], Var("maxBid")),
+      bid: Get(Select(["data", 0, 2], Var("maxBid"))),
+      timestamp: Now()
+    },
+    If(
+      GT(Var("amount"), 700),
+      Var("bid"),
+      If(
+        Equals(Select(["data", "email"], Var("bid")), "dummy4@example.com"),
+        Var("bid"),
+        Create(Collection("bid"), {
+          data: {
+            email: "dummy4@example.com",
+            name: "dummy4",
+            amount: 700,
+            timestamp: Var("timestamp"),
+            auctionRef: Select(
+              "ref",
+              Get(Match(Index("auction_by_name"), "dummy"))
+            )
+          }
+        })
+      )
+    )
+  )
+)
 ```
