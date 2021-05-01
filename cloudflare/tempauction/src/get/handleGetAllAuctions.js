@@ -6,7 +6,11 @@ export async function handleGetAllAuctions(request, fqlClient) {
 	const { headers } = request;
 	const contentType = headers.get("content-type") || "";
 	const init = {
-		headers: { 'content-type': 'application/json' },
+		headers: { 'Content-Type': 'application/json',
+		'Access-Control-Allow-Origin': 'http://localhost:3000',
+		'Access-Control-Allow-Methods': 'GET',
+		"Access-Control-Allow-Headers" : "Content-Type"
+		},
 		status: 500
 	}
 	try {
