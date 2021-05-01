@@ -352,7 +352,7 @@ https://docs.fauna.com/fauna/current/api/fql/functions/max?lang=go
     }
   ]
 }
-``
+```
 7 Create Bid ACID
 ```
 Let(

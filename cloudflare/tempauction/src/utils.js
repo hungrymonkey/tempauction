@@ -34,7 +34,7 @@ export function getFaunaError (error) {
   }
   return {code, description, status};
 }
-function dateToUTC(dateObj) {
+export function dateToUTC(dateObj) {
   let y = dateObj.getUTCFullYear();
   let m = dateObj.getUTCMonth().toString().padStart(2,'0');
   let d = dateObj.getUTCDay().toString().padStart(2,'0');
@@ -47,4 +47,10 @@ function dateToUTC(dateObj) {
 
 export function UTCtoDate(utcString) {
   return Date.parse(utcString);
+}
+
+export function validateEmail(email) {
+  //http://emailregex.com/
+  let email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return email_re.test(email);
 }

@@ -1,6 +1,6 @@
 const { handlePostBody } = require('./handlePostBody.js')
 const faunadb = require('faunadb');
-const {Equals,  Filter, Get, Index, Lambda, Let,  Map, Match, Max, Merge, Paginate, Select, Var} = faunadb.query;
+const {Equals,  Filter, Get, Index, Lambda, Let,  Map, Match, Merge, Paginate, Select, Var} = faunadb.query;
 
 
 export async function handleGetAllBids(request, fqlClient) {
