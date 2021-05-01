@@ -1,10 +1,11 @@
 const Router = require('./router')
 
-import faunadb from 'faunadb';
-import {customFetch, getFaunaError} from './utils.js';
+const faunadb = require('faunadb');
+const {customFetch, getFaunaError} = require('./utils.js');
 
-import { handleGetMaxBid } from './post/handleGetMaxBid.js';
-import { handleGetAllBids } from './post/handleGetAllBids.js';
+const { handleGetMaxBid } = require('./post/handleGetMaxBid.js');
+const { handleGetAllBids } = require( './post/handleGetAllBids.js');
+const { handleCreateBid } = require('./post/handleCreateBid.js');
 
 const faunaClient = new faunadb.Client({
   secret: FAUNA_SECRET,
@@ -38,6 +39,7 @@ async function handleRequest(request) {
   r.get('.*/foo', request => handler(request))
   r.post('.*/getallbids', request => handleGetAllBids(request, faunaClient))
   r.post('.*/getmaxbid', request => handleGetMaxBid(request, faunaClient))
+  r.post('.*/createbid', request => handleCreateBid(request, faunaClient))
   r.get('/', () => new Response('Hello worker!')) // return a default message for the root route
 
   const resp = await r.route(request)
