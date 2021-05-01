@@ -5,12 +5,13 @@ import logo from './logo.svg';
 import './App.css';
 
 import Header from './component/Header';
-import { fetchAllAuctions } from './handlers/get/fetchallauctions.js';
-import { render } from "@testing-library/react";
+import { Auction } from './Auction';
 
+import { fetchAllAuctions } from './handlers/get/fetchallauctions.js';
 
 function App() {
   const [auctionList, setAuctionList] = useState([]);
+  const [auctionIndex, setAuctionIndex] = useState(0);
   useEffect(() => {
     fetchAllAuctions().then(
         (value) => setAuctionList(value)
@@ -18,12 +19,16 @@ function App() {
     // code to run on component mount
   }, [])
   var render = function(props) {
-    console.log(props.auctions)
+    console.log(auctionList)
     return (
       <div className="App">
-        <Header/>
+        <Router >
+            <Switch>
+              <Route path="/auction/:id" child={<Auction auction={auctionList}/>}/>
+            </Switch>
+        </Router>
+        <Header auctions={auctionList}/>
         <header className="App-header">
-        
           <img src={logo} className="App-logo" alt="logo" />
           <p>
             Edit <code>src/App.js</code> and save to reload.
