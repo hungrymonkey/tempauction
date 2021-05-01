@@ -52,10 +52,13 @@ function a11yProps(index) {
 export default function Header(props) {
 	const [tabIndex, setTabIndex] = React.useState(0);
 
+	const handleTabChange = (event, newValue) => {
+		setTabIndex(newValue);
+	};
+
 	var renderTabs = function() {
-		console.log(props.auctions[0]["data"]["name"]);
 		return (
-			<Tabs value={tabIndex} aria-label="simple tabs example">
+			<Tabs value={tabIndex} onChange={handleTabChange} aria-label="simple tabs example">
 			{
 				props.auctions.map((a, i) => (
 					<Tab label={a["data"]["name"]} {...a11yProps(i)} />
@@ -72,11 +75,10 @@ export default function Header(props) {
         return (
             <header style={headerStyles}>
 				<AppBar position="static">
-				
 					{
 						hasAuctions ? 
 							renderTabs()
-						: <Tabs value={tabIndex} aria-label="simple tabs example"> <Tab label="No Auctions Found" {...a11yProps(0)} /></Tabs>
+						: <Tabs value={0} aria-label="simple tabs example"> <Tab label="No Auctions Found" {...a11yProps(0)} /></Tabs>
 					}
 					
 				</AppBar>
