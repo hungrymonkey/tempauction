@@ -79,7 +79,7 @@ export async function handleCreateBid(request, fqlClient) {
 						bidIncrement: Select(["data","bid_increment"], Get(Select(["data", 0, 1], Var("maxBid"))))
 					  },
 					  If(
-						GTE(Var("amount"), bidAmount),
+						GTE(Var("amount"), bidAmount + bidIncrement),
 						Var("bid"),
 						If(
 						  Equals(Select(["data", "email"], Var("bid")), emailString),
