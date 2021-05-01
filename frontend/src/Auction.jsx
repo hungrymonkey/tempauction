@@ -5,21 +5,26 @@ import Header from './component/Header';
 
 
 export function Auction(props) {
+  const { match } = props;
+  const { params } = match;
+  const { page } = params; 
+
   useEffect(() => {
     // code to run on component mount
+    console.log("*********mounted Auction")
+    console.log(props)
   }, [])
   var render = function() {
     console.log(props.auctions)
     return (
     <div className="Auction">
-      <Header auctions={[]}/>
-      <header className="App-header">
+      <header className="App-header2">
       
       <p>
         Edit <code>src/App.js</code> and save to reload.
       </p>
       <a
-        className="App-link"
+        className="App-link2"
         href="https://reactjs.org"
         target="_blank"
         rel="noopener noreferrer"
