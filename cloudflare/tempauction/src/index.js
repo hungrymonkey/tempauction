@@ -7,7 +7,6 @@ const { handleGetMaxBid } = require('./post/handleGetMaxBid.js');
 const { handleGetAllBids } = require( './post/handleGetAllBids.js');
 const { handleCreateBid } = require('./post/handleCreateBid.js');
 const { handleGetAllAuctions } = require('./get/handleGetAllAuctions.js')
-const { handleGetAllAuctionsOptions } = require('./options/handlerGetAllAuctionsOptions.js');
 
 const faunaClient = new faunadb.Client({
   secret: FAUNA_SECRET,
