@@ -82,7 +82,7 @@ function App() {
           <div>
             <header style={headerStyles}>
               <AppBar position="static" color="transparent">
-               <Tabs value={auctionIndex} aria-label="simple tabs example" > 
+               <Tabs value={auctionIndex} aria-label="simple tabs example"  onChange={handleIndexChange}> 
                   <Tab key={"tab-0"} label="Home" {...a11yProps(0)} component={RouterLink}  to="/" />
                   {
                     hasAuctions ? 
