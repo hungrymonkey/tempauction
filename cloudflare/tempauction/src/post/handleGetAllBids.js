@@ -1,5 +1,5 @@
-import { handlePostBody } from './handlePostBody.js'
-import faunadb from 'faunadb';
+const { handlePostBody } = require('./handlePostBody.js')
+const faunadb = require('faunadb');
 const {Equals,  Filter, Get, Index, Lambda, Let,  Map, Match, Max, Merge, Paginate, Select, Var} = faunadb.query;
 
 

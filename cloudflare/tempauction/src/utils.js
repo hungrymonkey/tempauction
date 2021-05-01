@@ -34,3 +34,17 @@ export function getFaunaError (error) {
   }
   return {code, description, status};
 }
+function dateToUTC(dateObj) {
+  let y = dateObj.getUTCFullYear();
+  let m = dateObj.getUTCMonth().toString().padStart(2,'0');
+  let d = dateObj.getUTCDay().toString().padStart(2,'0');
+  let h = dateObj.getUTCHours().toString().padStart(2,'0');
+  let min = dateObj.getUTCMinutes().toString().padStart(2,'0');
+  let s = dateObj.getUTCSeconds().toString().padStart(2,'0');
+  return `${y}-${m}-${d}T${h}:${min}:${s}Z`;
+}
+//TODO: Needs to covert dateobj from epoch
+
+export function UTCtoDate(utcString) {
+  return Date.parse(utcString);
+}
