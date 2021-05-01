@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link as RouterLink, Switch, Route, useHistory } from "react-router-dom";
+import { BrowserRouter as Router, Link as RouterLink, Switch, Route, useHistory } from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
-import { MemoryRouter as Router } from 'react-router';
 
 import { fetchAllAuctions } from './handlers/get/fetchallauctions.js';
 import { Auction } from './Auction';
@@ -83,7 +82,7 @@ function App() {
           <div>
             <header style={headerStyles}>
               <AppBar position="static" color="transparent">
-               <Tabs value={auctionIndex} aria-label="simple tabs example" onChange={handleIndexChange}> 
+               <Tabs value={auctionIndex} aria-label="simple tabs example" > 
                   <Tab key={"tab-0"} label="Home" {...a11yProps(0)} component={RouterLink}  to="/" />
                   {
                     hasAuctions ? 
@@ -94,8 +93,8 @@ function App() {
               </AppBar>       
             </header> 
             <Switch>
-              <Route path='/'>
-                {Home()}
+              <Route exact path='/'>
+                <Home/>
               </Route>
               <Route path='/auction/:id'>
                   <Auction auctions={auctionList}/>

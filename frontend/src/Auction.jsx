@@ -2,12 +2,15 @@
 import React, { useEffect, useState } from "react";
 import Header from './component/Header';
 
-
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useRouteMatch
+} from "react-router-dom";
 
 export function Auction(props) {
-  const { match } = props;
-  const { params } = match;
-  const { page } = params; 
 
   useEffect(() => {
     // code to run on component mount
@@ -16,6 +19,7 @@ export function Auction(props) {
   }, [])
   var render = function() {
     console.log(props.auctions)
+    console.log("******** rendering")
     return (
     <div className="Auction">
       <header className="App-header2">
