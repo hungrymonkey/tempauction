@@ -15,6 +15,11 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 	  width: '100%',
 	},
+	bidPaper: {
+		padding: theme.spacing(2),
+		margin: 'auto',
+		maxWidth: 800,
+	},
 	paper: {
 	  width: '100%',
 	  marginBottom: theme.spacing(2),
@@ -71,7 +76,7 @@ export default function BidTable(props) {
   function render(props) {
 	const rows = props.data;
 	return (
-		<Paper className={classes.root}>
+		<div>
 		<TableContainer className={classes.container}>
 			<Table stickyHeader aria-label="sticky table">
 			<TableHead>
@@ -115,7 +120,7 @@ export default function BidTable(props) {
 			onChangePage={handleChangePage}
 			onChangeRowsPerPage={handleChangeRowsPerPage}
 		/>
-		</Paper>
+		</div>
 	);
 	}
 	return render(props)

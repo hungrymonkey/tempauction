@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom';
-import BidTable from './component/BidTable';
+import { makeStyles } from '@material-ui/core/styles';
 
 import {
   BrowserRouter as Router,
@@ -12,9 +12,51 @@ import {
   useParams
 } from "react-router-dom";
 
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import { Button, TextField } from '@material-ui/core';
+
 import { getAllBids } from './handlers/post/getAllBids';
+import BidTable from './component/BidTable';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    margin: 'auto',
+    maxWidth: 400,
+  },
+  bidPaper: {
+    padding: theme.spacing(2),
+    margin: 'auto',
+    maxWidth: 800,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  image: {
+    width: 128,
+    height: 128,
+  },
+  img: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
+  input: {
+    minWidth: 300,
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 export function Auction(props) {
+  const classes = useStyles();
   const { match } = props;
   const { auctions, setTabIndex, tabIndex } = props;
   const [ bids, setBids ] = useState([]);
@@ -56,23 +98,41 @@ export function Auction(props) {
   var render = function(args) {
     let hasBids = bids.length > 0;
     return (
-    <div className="Auction">
+    <div className={classes.root}>
       <header className="App-header2">
+      <Grid container direction="column" justify="center" alignItems="center" spacing={2} style={{ minHeight: '100vh' }}>
+        <Grid item xs={24}>
+            <Grid container justify="center" spacing={3}>
+              <Grid key={0} item>
+                <Paper className={classes.paper} >
+                  Product Placeholder
+                </Paper>
+                
+              </Grid>
+              <Grid key={1} item>
+                
+                <Paper className={classes.paper} >
+                  <form className={classes.form} noValidate>
+                    <Grid container direction="column" justify="center" spacing={2}>
+                      <Grid key={0} item><TextField variant="outlined" required fullWidth placeholder={"email"} /></Grid>
+                      <Grid key={1} item><TextField variant="outlined" required fullWidth placeholder={"name"} /></Grid>
+                      <Grid key={2} item><TextField variant="outlined" required fullWidth placeholder={"bid amount"} /></Grid>
+                      <Grid key={3} item><Button className={classes.submit} variant="contained">Bid</Button></Grid>
+                    </Grid>
+                  </form>
+                </Paper>
+              </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Paper className={classes.bidPaper}>
+            { 
+              hasBids ? <BidTable data={bids} /> : <h2>Create the first Bid</h2>
+            }
+          </Paper>
+        </Grid>
+      </Grid>
       
-      <p>
-        Edit <code>src/App.js</code> and save to reload.
-      </p>
-      <a
-        className="App-link2"
-        href="https://reactjs.org"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Auction Not Found
-      </a>
-      { 
-        hasBids ? <BidTable data={bids} /> : <h2>Create the first Bid</h2>
-      }
       </header>
     </div>
     );

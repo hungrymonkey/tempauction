@@ -7,8 +7,14 @@ export async function handleCreateBid(request, fqlClient) {
 	const { headers } = request;
 	const contentType = headers.get("content-type") || "";
 	const init = {
-		headers: { 'content-type': 'application/json' },
-	}
+		headers: {
+			'content-type': 'application/json',
+			'Access-Control-Allow-Origin': 'http://localhost:3000',
+			'Access-Control-Allow-Methods': 'POST',
+			'Access-Control-Allow-Headers' : "Content-Type",
+			'status': 404
+		}
+	};
 	
 	if (contentType.includes("application/json") || contentType.includes("form")) {
 		var args = await handlePostBody(request);
