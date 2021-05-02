@@ -7,7 +7,13 @@ export async function handleGetAllBids(request, fqlClient) {
 	const { headers } = request;
 	const contentType = headers.get("content-type") || "";
 	const init = {
-		headers: { 'content-type': 'application/json' }
+		headers: {
+			'content-type': 'application/json',
+			'Access-Control-Allow-Origin': 'http://localhost:3000',
+			'Access-Control-Allow-Methods': 'POST',
+			'Access-Control-Allow-Headers' : "Content-Type",
+			'status': 404
+		}
 	}
 	if (contentType.includes("application/json") || contentType.includes("form")) {
 		var args = await handlePostBody(request);
@@ -16,7 +22,7 @@ export async function handleGetAllBids(request, fqlClient) {
 			contentType: headers.get("content-type"), 
 			error_message: "contentType unsupported",
 			error_code: 200,
-			endpoint: "getmaxbid",
+			endpoint: "getallbids",
 			supportedContentTypes: ["application/x-www-form-urlencoded", "application/json"]
 		});
 		return new Response(body, init)
@@ -48,14 +54,30 @@ export async function handleGetAllBids(request, fqlClient) {
 					)
 				)
 			)
-			var body = JSON.stringify({result: results["data"]});
+			if( results["data"].length > 0) {
+				init["status"] = 200;
+				var body = JSON.stringify({result: results["data"], error_code: 0});
+			} else {
+				let results = await fqlClient.query(Get(Match(Index("auction_by_name"), args["auction"])))
+				if(results.ts > 0){
+					init["status"] = 200;
+					var body = JSON.stringify({
+						contentType: headers.get("content-type"), 
+						error_message: args["auction"] + " has zero bids",
+						results: [],
+						error_code: 0,
+						endpoint: "getallbids",
+						arguments: args
+					})
+				}
+			}
 		} catch (exception) {
 			console.log(exception)
 			var body = JSON.stringify({
 				contentType: headers.get("content-type"), 
 				error_message: "auction not found",
 				error_code: 202,
-				endpoint: "getmaxbid",
+				endpoint: "getallbids",
 				arguments: args
 			})
 			return new Response(body, init)
@@ -66,7 +88,7 @@ export async function handleGetAllBids(request, fqlClient) {
 			contentType: headers.get("content-type"), 
 			error_message: "auction argument not found",
 			error_code: 201,
-			endpoint: "getmaxbid",
+			endpoint: "getallbids",
 			arguments: args
 		})
 
