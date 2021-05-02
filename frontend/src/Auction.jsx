@@ -7,19 +7,17 @@ import {
   Switch,
   Route,
   Link,
-  useRouteMatch
+  useRouteMatch,
+  useParams
 } from "react-router-dom";
 
 export function Auction(props) {
-
+  const { match } = props;
+  const { auctions } = props;
   useEffect(() => {
     // code to run on component mount
-    console.log("*********mounted Auction")
-    console.log(props)
   }, [])
   var render = function() {
-    console.log(props.auctions)
-    console.log("******** rendering")
     return (
     <div className="Auction">
       <header className="App-header2">

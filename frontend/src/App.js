@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Link as RouterLink, Switch, Route, useHistory } from "react-router-dom";
+import { BrowserRouter as Router, Link as RouterLink, Switch, Route } from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
 
@@ -52,20 +52,18 @@ function a11yDummyProps(index) {
 
 function App() {
   const [auctionList, setAuctionList] = useState([]);
-  const [auctionIndex, setAuctionIndex] = useState(0);
-
+  const [auctionIndex, setAuctionIndex] = useState(-1);
   useEffect(() => {
     fetchAllAuctions().then(
-        (value) => setAuctionList(value)
+        (value) => { 
+          setAuctionList(value)
+        }
     )
     // code to run on component mount
   }, [])
 
-  const handleIndexChange = (event, index) => {
-    console.log(index);
-    console.log(event)
-    setAuctionIndex(index);
-  }
+  const handleIndexChange = (event, index) => setAuctionIndex(index);
+
   var renderTabs = function() {
     return (
       auctionList.map((a, i) => (
@@ -74,7 +72,6 @@ function App() {
     );
   }
   var render = function(props) {
-    console.log(auctionList)
     let hasAuctions = auctionList.length > 0;
     return (
       <div className="App" >
@@ -96,9 +93,10 @@ function App() {
               <Route exact path='/'>
                 <Home/>
               </Route>
-              <Route path='/auction/:id'>
-                  <Auction auctions={auctionList}/>
-              </Route>
+              <Route path='/auction/:id' render={(props) => 
+                <Auction auctions={auctionList} {...props}/> 
+              } />
+              
             </Switch>
           </div>
         </Router>
