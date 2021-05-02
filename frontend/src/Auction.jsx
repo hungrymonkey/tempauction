@@ -26,16 +26,14 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     margin: 'auto',
-    maxWidth: 400,
+    maxWidth: 500,
   },
   bidPaper: {
-    padding: theme.spacing(2),
     margin: 'auto',
     maxWidth: 800,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
   },
   image: {
     width: 128,
@@ -61,6 +59,11 @@ export function Auction(props) {
   const { auctions, setTabIndex, tabIndex } = props;
   const [ bids, setBids ] = useState([]);
   const history = useHistory();
+
+  const [ emailField, setEmailField ] = useState("");
+  const [ bidField, setBidField ] = useState("");
+  const [ nameField, setNameField ] = useState("");
+
   useEffect(() => {
     // code to run on component mount
   }, [])
@@ -100,8 +103,8 @@ export function Auction(props) {
     return (
     <div className={classes.root}>
       <header className="App-header2">
-      <Grid container direction="column" justify="center" alignItems="center" spacing={2} style={{ minHeight: '100vh' }}>
-        <Grid item xs={24}>
+      <Grid container direction="column" justify="center" alignItems="center" spacing={5} style={{ minHeight: '90vh' }}>
+        <Grid item xs={12}>
             <Grid container justify="center" spacing={3}>
               <Grid key={0} item>
                 <Paper className={classes.paper} >
@@ -124,12 +127,12 @@ export function Auction(props) {
               </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Paper className={classes.bidPaper}>
+        <Grid item xs={20}>
+          
             { 
-              hasBids ? <BidTable data={bids} /> : <h2>Create the first Bid</h2>
+              hasBids ? <Paper className={classes.bidPaper}><BidTable data={bids} /></Paper> : <h2>Create the first Bid</h2>
             }
-          </Paper>
+          
         </Grid>
       </Grid>
       
