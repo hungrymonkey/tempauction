@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Link as RouterLink, Switch, Route } from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
+import Error from './404';
 
 import { fetchAllAuctions } from './handlers/get/fetchallauctions.js';
 import { Auction } from './Auction';
@@ -52,7 +53,7 @@ function a11yDummyProps(index) {
 
 function App() {
   const [auctionList, setAuctionList] = useState([]);
-  const [auctionIndex, setAuctionIndex] = useState(-1);
+  const [auctionIndex, setAuctionIndex] = useState(0);
   useEffect(() => {
     fetchAllAuctions().then(
         (value) => { 
@@ -93,10 +94,13 @@ function App() {
               <Route exact path='/'>
                 <Home/>
               </Route>
+              <Route path='/404'><Error/></Route>
               <Route path='/auction/:id' render={(props) => 
-                <Auction auctions={auctionList} {...props}/> 
+                <Auction auctions={auctionList} {...props} setTabIndex={setAuctionIndex}/> 
               } />
-              
+              <Route path="*">
+                <Error/>
+              </Route>
             </Switch>
           </div>
         </Router>

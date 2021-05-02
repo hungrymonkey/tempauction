@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import Header from './component/Header';
+import { useHistory } from 'react-router-dom';
 
 import {
   BrowserRouter as Router,
@@ -11,13 +12,34 @@ import {
   useParams
 } from "react-router-dom";
 
+import { getAllBids } from './handlers/post/getAllBids';
+
+
 export function Auction(props) {
   const { match } = props;
-  const { auctions } = props;
+  const { auctions, setTabIndex } = props;
+
+  const history = useHistory();
   useEffect(() => {
     // code to run on component mount
   }, [])
-  var render = function() {
+  useEffect(() => {
+      if(auctions.length > 0) {
+        var found = false;
+        for(let i = 0; i < auctions.length; i++){
+          if(auctions[i]["data"]["name"] === match.params.id){
+            found = true;
+            console.log("****** matched")
+            setTabIndex(i+1)
+            break;
+          }
+        }
+        if(!found) {history.push("/404");}
+      }
+    },
+    [props.auctions],
+  );
+  var render = function(args) {
     return (
     <div className="Auction">
       <header className="App-header2">
