@@ -48,7 +48,11 @@ const columns = [
   ];
 
 function createData(ts, name, nondenomatedamount, bidts) {
-	const amount = nondenomatedamount / 100;
+	var formatter = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'USD',
+	  });
+	const amount = formatter.format(nondenomatedamount / 100);
 	const bidtime = UTCtoDate(bidts).toString();
 	return { ts, name, amount, bidtime };
 }
