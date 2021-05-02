@@ -54,7 +54,6 @@ export function Auction(props) {
   [props.match.params],
 );
   var render = function(args) {
-    console.log("***********" + bids)
     let hasBids = bids.length > 0;
     return (
     <div className="Auction">

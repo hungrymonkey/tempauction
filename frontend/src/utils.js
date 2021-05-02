@@ -14,3 +14,15 @@ export function UTCtoDate(utcString) {
 	d.setTime(Date.parse(utcString))
 	return d;
 }
+
+export function formatLocalDate(dateObj) {
+	const options = {
+		year: 'numeric', month: 'numeric', day: 'numeric',
+		hour: 'numeric', minute: 'numeric', second: 'numeric',
+		hour12: true,
+		timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+		timeZoneName: 'short'
+	}
+	//return dateObj.toString()
+	return new Intl.DateTimeFormat('en-US', options).format(dateObj)
+}
