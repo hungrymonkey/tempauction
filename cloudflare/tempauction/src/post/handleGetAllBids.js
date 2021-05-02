@@ -1,6 +1,6 @@
 const { handlePostBody } = require('./handlePostBody.js')
 const faunadb = require('faunadb');
-const {Equals,  Filter, Get, Index, Lambda, Let,  Map, Match, Merge, Paginate, Select, Var} = faunadb.query;
+const {Equals, Filter, Format, Get, Index, Lambda, Let,  Map, Match, Merge, Paginate, Select, Var} = faunadb.query;
 
 
 export async function handleGetAllBids(request, fqlClient) {
@@ -32,7 +32,7 @@ export async function handleGetAllBids(request, fqlClient) {
 			let results = await fqlClient.query(
 				Map(
 					Filter(
-						Paginate(Match(Index("bid_by_amount_desc"))),
+					    Paginate(Match(Index("bid_by_amount_desc"))),
 						Lambda("Y", 
 							Let({ auctionRef: Select(1, Var("Y"))},
 								Equals(Select(["data", "name"], Get(Var("auctionRef"))), args["auction"])
@@ -43,8 +43,14 @@ export async function handleGetAllBids(request, fqlClient) {
 					"X", Let({
 							auction: Get(Select(1, Var("X"))), bid: Get(Select(2, Var("X")))
 						},
-						Merge(
-							Merge(Select(["data"], Var("bid")), {"ts": Select("ts", Var("bid"))}),
+						Merge({
+								email: Select(["data", "email"], Var("bid")),
+								name: Select(["data", "name"], Var("bid")),
+								amount: Select(["data", "amount"], Var("bid")),
+								timestamp: Format('%t', Select(["data", "timestamp"], Var("bid"))),
+								auctionRef: Select(["data", "auctionRef"], Var("bid")),
+								ts: Select("ts", Var("bid")),
+							},
 							Merge( 
 								{"auction_end": Select(["data", "auction_end"], Var("auction")) },
 								{"auction_name": Select(["data", "name"], Var("auction")) }
