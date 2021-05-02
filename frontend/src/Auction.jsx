@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
-import Header from './component/Header';
 import { useHistory } from 'react-router-dom';
+import BidTable from './component/BidTable';
 
 import {
   BrowserRouter as Router,
@@ -13,7 +13,6 @@ import {
 } from "react-router-dom";
 
 import { getAllBids } from './handlers/post/getAllBids';
-
 
 export function Auction(props) {
   const { match } = props;
@@ -40,13 +39,23 @@ export function Auction(props) {
     [props.auctions],
   );
   useEffect(() => {
-    getAllBids(props.match.params.id).then(
-      (value) => setBids(value)
+    let n = props.match.params.id;
+    getAllBids(n).then(
+      (value) => {
+        if (typeof value === 'undefined') {
+          console.log("*******************: getallbids " + n + " is " + typeof value );
+          setBids([])
+        } else {
+          setBids(value);
+        }
+      }
     )
   },
   [props.match.params],
 );
   var render = function(args) {
+    console.log("***********" + bids)
+    let hasBids = bids.length > 0;
     return (
     <div className="Auction">
       <header className="App-header2">
@@ -62,6 +71,9 @@ export function Auction(props) {
       >
         Auction Not Found
       </a>
+      { 
+        hasBids ? <BidTable data={bids} /> : <h2>Create the first Bid</h2>
+      }
       </header>
     </div>
     );
