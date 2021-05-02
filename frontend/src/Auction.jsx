@@ -17,8 +17,8 @@ import { getAllBids } from './handlers/post/getAllBids';
 
 export function Auction(props) {
   const { match } = props;
-  const { auctions, setTabIndex } = props;
-
+  const { auctions, setTabIndex, tabIndex } = props;
+  const [ bids, setBids ] = useState([]);
   const history = useHistory();
   useEffect(() => {
     // code to run on component mount
@@ -39,6 +39,13 @@ export function Auction(props) {
     },
     [props.auctions],
   );
+  useEffect(() => {
+    getAllBids(props.match.params.id).then(
+      (value) => setBids(value)
+    )
+  },
+  [props.match.params],
+);
   var render = function(args) {
     return (
     <div className="Auction">

@@ -10,6 +10,6 @@ export async function getAllBids(name) {
 		body: "auction=" + name 
 	});
 	const data = await response.json();
-	console.log("**** fetched: all auctions " + JSON.stringify(data).length  )
+	console.log("**** post: all bids " + JSON.stringify(data).length  )
 	return data["result"];
 }

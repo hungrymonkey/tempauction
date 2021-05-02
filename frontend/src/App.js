@@ -96,7 +96,7 @@ function App() {
               </Route>
               <Route path='/404'><Error/></Route>
               <Route path='/auction/:id' render={(props) => 
-                <Auction auctions={auctionList} {...props} setTabIndex={setAuctionIndex}/> 
+                <Auction auctions={auctionList} {...props} setTabIndex={setAuctionIndex} tabIndex={auctionIndex} /> 
               } />
               <Route path="*">
                 <Error/>
