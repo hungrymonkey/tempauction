@@ -9,7 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 
-import { UTCtoDate } from '../utils';
+import { UTCtoDate, formatLocalDate } from '../utils';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -53,7 +53,7 @@ function createData(ts, name, nondenomatedamount, bidts) {
 		currency: 'USD',
 	  });
 	const amount = formatter.format(nondenomatedamount / 100);
-	const bidtime = UTCtoDate(bidts).toString();
+	const bidtime = formatLocalDate(UTCtoDate(bidts));
 	return { ts, name, amount, bidtime };
 }
 export default function BidTable(props) {
@@ -70,7 +70,6 @@ export default function BidTable(props) {
   };
   function render(props) {
 	const rows = props.data;
-	console.log(rows)
 	return (
 		<Paper className={classes.root}>
 		<TableContainer className={classes.container}>
@@ -91,7 +90,6 @@ export default function BidTable(props) {
 			<TableBody>
 				{rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 				const r = createData(row["ts"], row["name"], row["amount"], row["timestamp"]);
-				console.log(r)
 				return (
 					<TableRow hover role="checkbox" tabIndex={-1} key={r.ts}>
 					{columns.map((column) => {
