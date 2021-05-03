@@ -83,7 +83,7 @@ export async function handleCreateBid(request, fqlClient) {
 						Create(Collection("bid"), {
 							data: {
 								email: Var("newEmail"),
-								name: Var("newEmail"),
+								name: Var("newName"),
 								amount: Var("newBid"),
 								timestamp:  Now(),
 								auctionRef: Select(
@@ -114,7 +114,7 @@ export async function handleCreateBid(request, fqlClient) {
 									  Create(Collection("bid"), {
 										  data: {
 											  email: Var("newEmail"),
-											  name: Var("newEmail"),
+											  name: Var("newName"),
 											  amount: Var("newBid"),
 											  timestamp:  Now(),
 											  auctionRef: Select(
