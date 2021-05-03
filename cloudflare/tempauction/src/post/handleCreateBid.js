@@ -75,7 +75,7 @@ export async function handleCreateBid(request, fqlClient) {
 						  "Y",
 						  Let(
 							{ auctionRef: Select(1, Var("Y")) },
-							Equals(Select(["data", "name"], Get(Var("auctionRef"))), auctionString)
+							Equals(Select(["data", "name"], Get(Var("auctionRef"))), Var("auctionName"))
 						  )
 						)
 					  )
@@ -93,8 +93,7 @@ export async function handleCreateBid(request, fqlClient) {
 								)
 							}
 						}),
-						Let(
-							{
+						Let({
 							  maxBid: Max(Var("allBids")),
 							  oldBidAmount: Select(["data", 0, 0], Var("maxBid")),
 							  bid: Get(Select(["data", 0, 2], Var("maxBid"))),
