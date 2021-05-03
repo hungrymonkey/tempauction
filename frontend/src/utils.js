@@ -33,6 +33,8 @@ export function validateEmail(email) {
 	return email_re.test(email);
 }
 
+//export function validateBidAmount(num) { return Number.isInteger(num) && num > 0; }
+
 export function json2formEncoded(json) {
 	return new URLSearchParams(Object.entries(json)).toString();
 }
