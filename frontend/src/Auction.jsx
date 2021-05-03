@@ -119,10 +119,11 @@ export function Auction(props) {
     let isNameString = typeof nameField === "string";
     console.log(bidField)
     if( isEmailValid && isBidNumber && !isNameEmpty && isNameString) {
+      let b = Number.parseFloat(bidField) * 100;
       createBid(
         {
           "name" : nameField,
-          "bid_amount" : bidField,
+          "bid_amount" : b|0,
           "email" : emailField,
           "auction": props.match.params.id
         }
