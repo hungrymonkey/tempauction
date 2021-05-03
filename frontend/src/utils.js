@@ -26,3 +26,13 @@ export function formatLocalDate(dateObj) {
 	//return dateObj.toString()
 	return new Intl.DateTimeFormat('en-US', options).format(dateObj)
 }
+
+export function validateEmail(email) {
+	//http://emailregex.com/
+	let email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return email_re.test(email);
+}
+
+export function json2formEncoded(json) {
+	return new URLSearchParams(Object.entries(json)).toString();
+}

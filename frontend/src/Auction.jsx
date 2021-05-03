@@ -14,9 +14,13 @@ import {
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { Button, TextField } from '@material-ui/core';
+import { TextField, InputAdornment } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
+import { validateEmail } from './utils';
 import { getAllBids } from './handlers/post/getAllBids';
+import { createBid } from './handlers/post/createBid';
+
 import BidTable from './component/BidTable';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,6 +28,11 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   paper: {
+    padding: theme.spacing(2),
+    margin: 'auto',
+    maxWidth: 500,
+  },
+  paper2: {
     padding: theme.spacing(2),
     margin: 'auto',
     maxWidth: 500,
@@ -85,6 +94,7 @@ export function Auction(props) {
   );
   useEffect(() => {
     let n = props.match.params.id;
+    setBidField("")
     getAllBids(n).then(
       (value) => {
         if (typeof value === 'undefined') {
@@ -95,32 +105,62 @@ export function Auction(props) {
         }
       }
     )
-  },
-  [props.match.params],
-);
-  var render = function(args) {
-    let hasBids = bids.length > 0;
+    },
+    [props.match.params],
+  );
+  var handleBidChange = (e) => setBidField(event.target.value);
+  var handleEmailChange = (e) => setEmailField(event.target.value);
+  var handleEmailChange = (e) => setNameField(e.target.value);
+
+  var handleCreateBid = function(event) {
+    let isEmailValid = validateEmail(emailField);
+    let isBidNumber = !isNaN(bidField);
+    let isNameEmpty = nameField == "";
+    if( isEmailValid && isBidNumber && !isNameEmpty ) {
+      createBid(
+        {
+          "name" : nameField,
+          "bid_amount" : bidField,
+          "email" : emailField,
+          "auction": props.match.params.id
+        }
+      )
+    }
+    
+  }
+  
+  var render = function(props) {
+    let hasBids = props.bids.length > 0;
+    let isEmailValid = validateEmail(props.email);
+    let isBidNumber = !isNaN(bidField);
     return (
     <div className={classes.root}>
       <header className="App-header2">
       <Grid container direction="column" justify="center" alignItems="center" spacing={5} style={{ minHeight: '90vh' }}>
         <Grid item xs={12}>
             <Grid container justify="center" spacing={3}>
-              <Grid key={0} item>
+              <Grid key={"input-item-0"} item>
                 <Paper className={classes.paper} >
                   Product Placeholder
                 </Paper>
                 
               </Grid>
-              <Grid key={1} item>
+              <Grid key={"input-paper-1"} item>
                 
-                <Paper className={classes.paper} >
+                <Paper className={classes.paper2} >
                   <form className={classes.form} noValidate>
                     <Grid container direction="column" justify="center" spacing={2}>
-                      <Grid key={0} item><TextField variant="outlined" required fullWidth placeholder={"email"} /></Grid>
-                      <Grid key={1} item><TextField variant="outlined" required fullWidth placeholder={"name"} /></Grid>
-                      <Grid key={2} item><TextField variant="outlined" required fullWidth placeholder={"bid amount"} /></Grid>
-                      <Grid key={3} item><Button className={classes.submit} variant="contained">Bid</Button></Grid>
+                      <Grid key={"input-email-2"} item>
+                        <TextField variant="outlined" required fullWidth placeholder={"email"} error={!isEmailValid} onChange={handleEmailChange}/>
+                      </Grid>
+                      <Grid key={"input-name-3"} item><TextField variant="outlined" required fullWidth placeholder={"name"} onChange={handleEmailChange}/></Grid>
+                      <Grid key={"input-bid-4"} item>
+                        <TextField variant="outlined" required fullWidth placeholder={"bid amount"} error={!isBidNumber} onChange={handleBidChange}
+                            InputProps={{startAdornment: (<InputAdornment position="start">$</InputAdornment>)}}
+                        />
+
+                      </Grid>
+                      <Grid key={"input-submit-5"} item><Button className={classes.submit} variant="contained">Bid</Button></Grid>
                     </Grid>
                   </form>
                 </Paper>
@@ -140,6 +180,6 @@ export function Auction(props) {
     </div>
     );
   }
-  return render({auction: props.auction})
+  return render({auction: props.auction, bids: bids, email: emailField})
   }
   
