@@ -8,10 +8,10 @@ export async function handleCreateBid(request, fqlClient) {
 	const contentType = headers.get("content-type") || "";
 	const init = {
 		headers: {
-			'content-type': 'application/json',
+			'content-type': 'application/x-www-form-urlencoded',
 			'Access-Control-Allow-Origin': 'http://localhost:3000',
-			'Access-Control-Allow-Methods': 'POST',
-			'Access-Control-Allow-Headers' : "Content-Type",
+			'Access-Control-Allow-Methods': 'POST, OPTIONS',
+			'Access-Control-Allow-Headers' : "Content-Type, Origin",
 		},
 		status: 404
 	};
@@ -29,7 +29,8 @@ export async function handleCreateBid(request, fqlClient) {
 		return new Response(body, init)
 	}
 	if ( args.hasOwnProperty('auction') && args.hasOwnProperty('bid_amount') && args.hasOwnProperty('email') && args.hasOwnProperty('name') ) {
-		let is_number = Number.isInteger(args['bid_amount']);
+		let bid_amount = Number.parseInt(args['bid_amount']);
+		let is_number = Number.isInteger(bid_amount);
 		let valid_email = validateEmail(args['email']);
 		let bider_name = typeof args['name'] === "string";
 		if( !(is_number && valid_email && bider_name)) {
@@ -59,7 +60,7 @@ export async function handleCreateBid(request, fqlClient) {
 		}
 		let auctionString = args['auction']
 		let nameString = args['name']
-		let bidAmount = args['bid_amount']
+		let bidAmount = bid_amount
 		let emailString = args["email"]
 		try {
 			let results = await fqlClient.query(
