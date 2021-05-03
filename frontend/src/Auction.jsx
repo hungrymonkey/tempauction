@@ -108,15 +108,17 @@ export function Auction(props) {
     },
     [props.match.params],
   );
-  var handleBidChange = (e) => setBidField(event.target.value);
-  var handleEmailChange = (e) => setEmailField(event.target.value);
-  var handleEmailChange = (e) => setNameField(e.target.value);
+  var handleBidChange = (e) => setBidField(e.target.value);
+  var handleEmailChange = (e) => setEmailField(e.target.value);
+  var handleNameChange = (e) => setNameField(e.target.value);
 
   var handleCreateBid = function(event) {
     let isEmailValid = validateEmail(emailField);
     let isBidNumber = !isNaN(bidField);
     let isNameEmpty = nameField == "";
-    if( isEmailValid && isBidNumber && !isNameEmpty ) {
+    let isNameString = typeof nameField === "string";
+    console.log(bidField)
+    if( isEmailValid && isBidNumber && !isNameEmpty && isNameString) {
       createBid(
         {
           "name" : nameField,
@@ -124,7 +126,7 @@ export function Auction(props) {
           "email" : emailField,
           "auction": props.match.params.id
         }
-      )
+      ).then((result) => console.log(result))
     }
     
   }
@@ -146,21 +148,19 @@ export function Auction(props) {
                 
               </Grid>
               <Grid key={"input-paper-1"} item>
-                
-                <Paper className={classes.paper2} >
+                <Paper className={classes.paper} >
                   <form className={classes.form} noValidate>
                     <Grid container direction="column" justify="center" spacing={2}>
                       <Grid key={"input-email-2"} item>
                         <TextField variant="outlined" required fullWidth placeholder={"email"} error={!isEmailValid} onChange={handleEmailChange}/>
                       </Grid>
-                      <Grid key={"input-name-3"} item><TextField variant="outlined" required fullWidth placeholder={"name"} onChange={handleEmailChange}/></Grid>
+                      <Grid key={"input-name-3"} item><TextField variant="outlined" required fullWidth placeholder={"name"} onChange={handleNameChange}/></Grid>
                       <Grid key={"input-bid-4"} item>
                         <TextField variant="outlined" required fullWidth placeholder={"bid amount"} error={!isBidNumber} onChange={handleBidChange}
                             InputProps={{startAdornment: (<InputAdornment position="start">$</InputAdornment>)}}
                         />
-
                       </Grid>
-                      <Grid key={"input-submit-5"} item><Button className={classes.submit} variant="contained">Bid</Button></Grid>
+                      <Grid key={"input-submit-5"} item><Button className={classes.submit} variant="contained" onClick={handleCreateBid}>Bid</Button></Grid>
                     </Grid>
                   </form>
                 </Paper>

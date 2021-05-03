@@ -8,7 +8,7 @@ export async function createBid(json) {
 	const response = await fetch(DB_URL, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded',
+			'Content-Type': 'application/x-www-form-urlencoded'
 		},
 		body: json2formEncoded(json)
 	});
