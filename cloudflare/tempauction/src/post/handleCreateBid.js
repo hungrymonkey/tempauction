@@ -13,7 +13,7 @@ export async function handleCreateBid(request, fqlClient) {
 			'Access-Control-Allow-Methods': 'POST, OPTIONS',
 			'Access-Control-Allow-Headers' : "Content-Type, Origin",
 		},
-		status: 404
+		status: 400
 	};
 	
 	if (contentType.includes("application/json") || contentType.includes("form")) {
@@ -87,19 +87,19 @@ export async function handleCreateBid(request, fqlClient) {
 						bid: Get(Select(["data", 0, 2], Var("maxBid"))),
 						bidIncrement: Select(["data","bid_increment"], Get(Select(["data", 0, 1], Var("maxBid"))))
 					  },
-					  If(GT(Add(Var("oldBidAmount"), Var("bidIncrement")), Var("newBid")), {
-							"error_message" : "bid increment too small",
-							"minium_bid" : Add(Var("oldBidAmount"), Var("bidIncrement")),
-							"arguments": args,
-							"error_code" : 510
-						},
-						If(Equals(Select(["data", "email"], Var("bid")), emailString), {
-									"error_message" : "email is bidding twice",
-									"arguments": args,
-									"error_code" : 511
-							},
+					  If(GT(Add(Var("oldBidAmount"), Var("bidIncrement")), Var("newBid")), { data: {
+							error_message : "bid increment too small",
+							minium_bid : Add(Var("oldBidAmount"), Var("bidIncrement")),
+							arguments: args,
+							error_code : 510
+						}},
+						If(Equals(Select(["data", "email"], Var("bid")), emailString), { data: { 
+									error_message: "email is bidding twice",
+									arguments: args,
+									error_code : 511
+							}},
 							If(GT(Select(["data", "timestamp"], Var("bid")), Now()),
-								{"error_message" : "bidder trying to move back in time", "error_code":513 },
+								{ data: {error_message : "bidder trying to move back in time", error_code:512 }},
 								Create(Collection("bid"), {
 									data: {
 										email: Var("newEmail"),
