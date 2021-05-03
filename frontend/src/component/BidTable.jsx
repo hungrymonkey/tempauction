@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+//import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,6 +14,11 @@ import { UTCtoDate, formatLocalDate } from '../utils';
 const useStyles = makeStyles((theme) => ({
 	root: {
 	  width: '100%',
+	},
+	bidPaper: {
+		padding: theme.spacing(2),
+		margin: 'auto',
+		maxWidth: 800,
 	},
 	paper: {
 	  width: '100%',
@@ -71,7 +76,7 @@ export default function BidTable(props) {
   function render(props) {
 	const rows = props.data;
 	return (
-		<Paper className={classes.root}>
+		<div>
 		<TableContainer className={classes.container}>
 			<Table stickyHeader aria-label="sticky table">
 			<TableHead>
@@ -115,7 +120,7 @@ export default function BidTable(props) {
 			onChangePage={handleChangePage}
 			onChangeRowsPerPage={handleChangeRowsPerPage}
 		/>
-		</Paper>
+		</div>
 	);
 	}
 	return render(props)

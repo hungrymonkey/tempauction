@@ -1,4 +1,4 @@
-export async function handleGetAllAuctionsOptions(request) {
+export async function handleCreateBidOptions(request) {
 	const init = {
 		headers: { 
 			'Content-type': 'application/json',
