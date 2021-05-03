@@ -3,9 +3,8 @@ const { GT, GTE, If, IsEmpty, ToInteger } = require('faunadb');
 const { handlePostBody } = require('./handlePostBody.js')
 const faunadb = require('faunadb');
 const { Add, Create, Collection, Equals, Filter, Get, Index, Lambda, Let, Match, Max, Now, Paginate, Select, Var} = faunadb.query;
-const { validateEmail } = require('../utils.js');
+const { validateEmail, validateBidAmount } = require('../utils.js');
 
-var validateBidAmount = (num) => Number.isInteger(num) && num > 0;
 
 export async function handleCreateBid(request, fqlClient) {
 	const { headers } = request;
