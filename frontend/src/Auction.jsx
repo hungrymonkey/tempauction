@@ -17,7 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import { TextField, InputAdornment } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 
-import { validateEmail } from './utils';
+import { validateEmail, validateBidAmount } from './utils';
 import { getAllBids } from './handlers/post/getAllBids';
 import { createBid } from './handlers/post/createBid';
 
@@ -135,7 +135,7 @@ export function Auction(props) {
   var render = function(props) {
     let hasBids = props.bids.length > 0;
     let isEmailValid = validateEmail(props.email);
-    let isBidNumber = !isNaN(bidField);
+    let isPostiveNumber = validateBidAmount(bidField);
     return (
     <div className={classes.root}>
       <header className="App-header2">
@@ -157,7 +157,7 @@ export function Auction(props) {
                       </Grid>
                       <Grid key={"input-name-3"} item><TextField variant="outlined" required fullWidth placeholder={"name"} onChange={handleNameChange}/></Grid>
                       <Grid key={"input-bid-4"} item>
-                        <TextField variant="outlined" required fullWidth placeholder={"bid amount"} error={!isBidNumber} onChange={handleBidChange}
+                        <TextField variant="outlined" required fullWidth placeholder={"bid amount"} error={!isPostiveNumber} onChange={handleBidChange}
                             InputProps={{startAdornment: (<InputAdornment position="start">$</InputAdornment>)}}
                         />
                       </Grid>
