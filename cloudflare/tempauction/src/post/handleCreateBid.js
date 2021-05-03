@@ -12,8 +12,8 @@ export async function handleCreateBid(request, fqlClient) {
 			'Access-Control-Allow-Origin': 'http://localhost:3000',
 			'Access-Control-Allow-Methods': 'POST',
 			'Access-Control-Allow-Headers' : "Content-Type",
-			'status': 404
-		}
+		},
+		status: 404
 	};
 	
 	if (contentType.includes("application/json") || contentType.includes("form")) {
@@ -35,7 +35,7 @@ export async function handleCreateBid(request, fqlClient) {
 		if( !(is_number && valid_email && bider_name)) {
 			var body = JSON.stringify({
 				contentType: headers.get("content-type"), 
-				error_message: "argumented Validation Failed",
+				error_message: "argument Validation Failed",
 				error_code: 504,
 				endpoint: "createbid",
 				arguments: args
@@ -85,7 +85,7 @@ export async function handleCreateBid(request, fqlClient) {
 						bidIncrement: Select(["data","bid_increment"], Get(Select(["data", 0, 1], Var("maxBid"))))
 					  },
 					  If(
-						GTE(Var("amount"), bidAmount + bidIncrement),
+						GTE(Var("amount"), bidAmount + Var("bidIncrement")),
 						Var("bid"),
 						If(
 						  Equals(Select(["data", "email"], Var("bid")), emailString),

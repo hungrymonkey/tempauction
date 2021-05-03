@@ -7,6 +7,7 @@ const { handleGetMaxBid } = require('./post/handleGetMaxBid.js');
 const { handleGetAllBids } = require( './post/handleGetAllBids.js');
 const { handleCreateBid } = require('./post/handleCreateBid.js');
 const { handleGetAllAuctions } = require('./get/handleGetAllAuctions.js')
+const { handleCreateBidOptions } = require('./options/handleCreateBidOptions');
 
 const faunaClient = new faunadb.Client({
   secret: FAUNA_SECRET,
@@ -42,6 +43,7 @@ async function handleRequest(request) {
   r.post('.*/getallbids', request => handleGetAllBids(request, faunaClient))
   r.post('.*/getmaxbid', request => handleGetMaxBid(request, faunaClient))
   r.post('.*/createbid', request => handleCreateBid(request, faunaClient))
+  r.options('.*/createbid', request => handleCreateBidOptions(request));
   r.get('/', () => new Response('Hello worker!')) // return a default message for the root route
 
   const resp = await r.route(request)
