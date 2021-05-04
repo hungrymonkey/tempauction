@@ -74,6 +74,7 @@ export function Auction(props) {
   const [ bidField, setBidField ] = useState("");
   const [ nameField, setNameField ] = useState("");
   const [ endTime, setEndTime ] = useState((new Date()).toISOString());
+  const [ createResult, setCreateResult ] = useState({});
 
 
   useEffect(() => {
@@ -101,7 +102,7 @@ export function Auction(props) {
     setBidField("")
     if(auctions.length > 0) {
       for(let i = 0; i < auctions.length; i++){
-        if(auctions[i]["data"]["name"] === match.params.id){
+        if(auctions[i]["data"]["name"] === n){
           setEndTime(auctions[i]["data"]["auction_end"])
           break;
         }
@@ -120,7 +121,10 @@ export function Auction(props) {
     },
     [props.match.params],
   );
-  var handleBidChange = (e) => setBidField(e.target.value);
+  var handleBidChange = (e) => {
+    setCreateResult({});
+    setBidField(e.target.value)
+  };
   var handleEmailChange = (e) => setEmailField(e.target.value);
   var handleNameChange = (e) => setNameField(e.target.value);
 
@@ -129,7 +133,6 @@ export function Auction(props) {
     let isBidNumber = !isNaN(bidField);
     let isNameEmpty = nameField == "";
     let isNameString = typeof nameField === "string";
-    console.log(bidField)
     if( isEmailValid && isBidNumber && !isNameEmpty && isNameString) {
       let b = Number.parseFloat(bidField) * 100;
       createBid(
@@ -139,7 +142,12 @@ export function Auction(props) {
           "email" : emailField,
           "auction": props.match.params.id
         }
-      ).then((result) => console.log(result))
+      ).then(
+        (result) => {
+          console.log(result);
+          setCreateResult(result);
+        }
+      ).catch((err) => { setCreateResult({"error_message": "Input Error"} )})
     }
     
   }
@@ -149,11 +157,16 @@ export function Auction(props) {
     let isEmailValid = validateEmail(props.email);
     let isPostiveNumber = validateBidAmount(bidField);
     let endDateObj = UTCtoDate(endTime)
+    let auctionFinished = endDateObj.getTime() > Date.now();
+    let hasInputError = createResult.hasOwnProperty("error_message");
     return (
     <div className={classes.root}>
       <header className="App-header2">
       <Grid container direction="column" justify="center" alignItems="center" spacing={5} style={{ minHeight: '90vh' }}>
-        <Grid item xs={12}><Typography>Auction End Time: {formatLocalDate(endDateObj)}</Typography></Grid>
+        <Grid item xs={12}>
+          <Typography>{ auctionFinished ?  "Auction End Time: " + formatLocalDate(endDateObj) : "Auction is over"}
+          </Typography>
+        </Grid>
         <Grid item xs={12}>
             <Grid container justify="center" spacing={3}>
               <Grid key={"input-item-0"} item>
@@ -166,6 +179,7 @@ export function Auction(props) {
                 <Paper className={classes.paper} >
                   <form className={classes.form} noValidate>
                     <Grid container direction="column" justify="center" spacing={2}>
+                      <Grid key={"input-error-0"} item>{ hasInputError ?  <Typography color="error">{createResult["error_message"]}</Typography> : <div/>}</Grid>
                       <Grid key={"input-email-2"} item>
                         <TextField variant="outlined" required fullWidth placeholder={"email"} error={!isEmailValid} onChange={handleEmailChange}/>
                       </Grid>
@@ -173,9 +187,12 @@ export function Auction(props) {
                       <Grid key={"input-bid-4"} item>
                         <TextField variant="outlined" required fullWidth placeholder={"bid amount"} error={!isPostiveNumber} onChange={handleBidChange}
                             InputProps={{startAdornment: (<InputAdornment position="start">$</InputAdornment>)}}
+                            value={bidField}
                         />
                       </Grid>
-                      <Grid key={"input-submit-5"} item><Button className={classes.submit} variant="contained" onClick={handleCreateBid}>Bid</Button></Grid>
+                      <Grid key={"input-submit-5"} item>
+                        <Button className={classes.submit} disabled={!auctionFinished} variant="contained" onClick={handleCreateBid}>Bid</Button>
+                      </Grid>
                     </Grid>
                   </form>
                 </Paper>
