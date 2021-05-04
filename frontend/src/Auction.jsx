@@ -22,7 +22,6 @@ import { getAllBids } from './handlers/post/getAllBids';
 import { createBid } from './handlers/post/createBid';
 
 import BidTable from './component/BidTable';
-import CountDown from './component/CountDown';
 
 const useStyles = makeStyles((theme) => ({
   root: {
