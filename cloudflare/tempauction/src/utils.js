@@ -49,7 +49,7 @@ function UTCtoDate(utcString) {
   d.setTime(Date.parse(utcString))
   return d;
 }
-export function validateBidAmount(num) { return Number.isInteger(num) && num > 0; }
+export function validateBidAmount(num) { return Number.isInteger(num); }
 
 export function validateEmail(email) {
   //http://emailregex.com/

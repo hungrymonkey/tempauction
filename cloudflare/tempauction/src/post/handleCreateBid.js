@@ -39,7 +39,7 @@ export async function handleCreateBid(request, fqlClient) {
 		if( !(is_number && valid_email && bider_name)) {
 			var body = JSON.stringify({
 				contentType: headers.get("content-type"), 
-				error_message: "argument Validation Failed",
+				error_message: "Argument Validation Failed",
 				error_code: 504,
 				endpoint: "createbid",
 				arguments: args
@@ -131,9 +131,11 @@ export async function handleCreateBid(request, fqlClient) {
 					)
 				)
 			)
-			console.log(results)
 			init["status"] = 200
-			var body = JSON.stringify({result: results["data"], error_code: 0});
+			if(results["data"].hasOwnProperty("error_message")) {
+				var body = JSON.stringify(results["data"]);
+			} else
+				var body = JSON.stringify({result: results["data"], error_code: 0});
 		} catch (exception) {
 			console.log(exception)
 			var body = JSON.stringify({
