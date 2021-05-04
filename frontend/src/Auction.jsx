@@ -14,14 +14,15 @@ import {
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import { TextField, InputAdornment } from '@material-ui/core';
+import { TextField, InputAdornment, Typography } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 
-import { validateEmail, validateBidAmount } from './utils';
+import { validateEmail, validateBidAmount, UTCtoDate, formatLocalDate } from './utils';
 import { getAllBids } from './handlers/post/getAllBids';
 import { createBid } from './handlers/post/createBid';
 
 import BidTable from './component/BidTable';
+import CountDown from './component/CountDown';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,11 +73,12 @@ export function Auction(props) {
   const [ emailField, setEmailField ] = useState("");
   const [ bidField, setBidField ] = useState("");
   const [ nameField, setNameField ] = useState("");
-  const [ endTime, setEndTime ] = useState("");
+  const [ endTime, setEndTime ] = useState((new Date()).toISOString());
 
 
   useEffect(() => {
     // code to run on component mount
+    setEndTime((new Date()).toISOString())
   }, [])
   useEffect(() => {
       if(auctions.length > 0) {
@@ -86,7 +88,6 @@ export function Auction(props) {
             found = true;
             console.log("****** matched")
             setTabIndex(i+1)
-            setEndTime(auctions[i]["data"]["auction_end"])
             break;
           }
         }
@@ -98,12 +99,20 @@ export function Auction(props) {
   useEffect(() => {
     let n = props.match.params.id;
     setBidField("")
+    if(auctions.length > 0) {
+      for(let i = 0; i < auctions.length; i++){
+        if(auctions[i]["data"]["name"] === match.params.id){
+          setEndTime(auctions[i]["data"]["auction_end"])
+          break;
+        }
+      }
+    }
     getAllBids(n).then(
       (value) => {
         if (typeof value === 'undefined') {
           console.log("*******************: getallbids " + n + " is " + typeof value );
           setBids([])
-        } else {
+        } else {       
           setBids(value);
         }
       }
@@ -139,10 +148,12 @@ export function Auction(props) {
     let hasBids = props.bids.length > 0;
     let isEmailValid = validateEmail(props.email);
     let isPostiveNumber = validateBidAmount(bidField);
+    let endDateObj = UTCtoDate(endTime)
     return (
     <div className={classes.root}>
       <header className="App-header2">
       <Grid container direction="column" justify="center" alignItems="center" spacing={5} style={{ minHeight: '90vh' }}>
+        <Grid item xs={12}><Typography>Auction End Time: {formatLocalDate(endDateObj)}</Typography></Grid>
         <Grid item xs={12}>
             <Grid container justify="center" spacing={3}>
               <Grid key={"input-item-0"} item>
