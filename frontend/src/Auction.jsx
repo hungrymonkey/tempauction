@@ -72,6 +72,8 @@ export function Auction(props) {
   const [ emailField, setEmailField ] = useState("");
   const [ bidField, setBidField ] = useState("");
   const [ nameField, setNameField ] = useState("");
+  const [ endTime, setEndTime ] = useState("");
+
 
   useEffect(() => {
     // code to run on component mount
@@ -84,6 +86,7 @@ export function Auction(props) {
             found = true;
             console.log("****** matched")
             setTabIndex(i+1)
+            setEndTime(auctions[i]["data"]["auction_end"])
             break;
           }
         }
@@ -169,7 +172,6 @@ export function Auction(props) {
           </Grid>
         </Grid>
         <Grid item xs={20}>
-          
             { 
               hasBids ? <Paper className={classes.bidPaper}><BidTable data={bids} /></Paper> : <h2>Create the first Bid</h2>
             }
