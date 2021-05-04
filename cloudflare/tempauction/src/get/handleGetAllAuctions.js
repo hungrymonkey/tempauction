@@ -1,6 +1,11 @@
 
 const faunadb = require('faunadb');
-const {Get, Index, Lambda,  Map, Match, Paginate, Var} = faunadb.query;
+const { 
+		Format, Get, Index, Lambda, 
+		Map, Match, Merge, 
+		Paginate, Select, Var
+	} = faunadb.query;
+
 
 export async function handleGetAllAuctions(request, fqlClient) {
 	const { headers } = request;
@@ -11,7 +16,7 @@ export async function handleGetAllAuctions(request, fqlClient) {
 		'Access-Control-Allow-Methods': 'GET',
 		"Access-Control-Allow-Headers" : "Content-Type"
 		},
-		status: 500
+		status: 404
 	}
 	try {
 		let results = await fqlClient.query(
@@ -19,7 +24,13 @@ export async function handleGetAllAuctions(request, fqlClient) {
 				Paginate(
 					Match(Index("all_auctions"))
 				),
-				Lambda("X", Get(Var("X")))
+				Lambda("X", 
+				  Merge(Get(Var("X")), 
+					{ "data": Merge( Select(["data"], Get(Var("X"))), 
+					  {"auction_end": Format('%T', Select(["data", "auction_end"], Get(Var("X")) ))}
+					)}
+				  )
+				)
 			)
 		)
 		var body = JSON.stringify({result: results["data"], error_code: 0});
@@ -27,11 +38,10 @@ export async function handleGetAllAuctions(request, fqlClient) {
 	} catch (exception) {
 		console.log(exception)
 		var body = JSON.stringify({
-			contentType: headers.get("content-type"), 
 			error_message: "auction not found",
 			error_code: 502,
+			results: [],
 			endpoint: "createbid",
-			arguments: args
 		})
 		
 	}
