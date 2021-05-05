@@ -1,0 +1,9 @@
+name = "frontend"
+type = 'webpack'
+account_id = '645c9b337a377d4dd6c60fc80f4ca559'
+route = ''
+zone_id = ''
+usage_model = ''
+workers_dev = true
+target_type = "webpack"
+site = {bucket = "./build",entry-point = "workers-site"}

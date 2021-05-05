@@ -1,15 +1,16 @@
 const { handlePostBody } = require('./handlePostBody.js')
 const faunadb = require('faunadb');
 const {Equals, Filter, Format, Get, Index, Lambda, Let,  Map, Match, Merge, Paginate, Select, Var} = faunadb.query;
-
+const { VALID_URL_SET } = require('../config.js');
 
 export async function handleGetAllBids(request, fqlClient) {
 	const { headers } = request;
 	const contentType = headers.get("content-type") || "";
+	const origin = headers.get("origin") || "";
 	const init = {
 		headers: {
 			'content-type': 'application/json',
-			'Access-Control-Allow-Origin': 'http://localhost:3000',
+			'Access-Control-Allow-Origin': VALID_URL_SET.has(origin) ? origin : "localhost:3000",
 			'Access-Control-Allow-Methods': 'POST',
 			'Access-Control-Allow-Headers' : "Content-Type",
 		},
