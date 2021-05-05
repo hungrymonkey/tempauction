@@ -96,6 +96,19 @@ export function Auction(props) {
     },
     [props.auctions],
   );
+  var fetchBids = function() {
+    let n = props.match.params.id
+    getAllBids(n).then(
+      (value) => {
+        if (typeof value === 'undefined') {
+          console.log("*******************: getallbids " + n + " is " + typeof value );
+          setBids([])
+        } else {       
+          setBids(value);
+        }
+      }
+    )
+  }
   useEffect(() => {
     let n = props.match.params.id;
     setBidField("")
@@ -107,16 +120,7 @@ export function Auction(props) {
         }
       }
     }
-    getAllBids(n).then(
-      (value) => {
-        if (typeof value === 'undefined') {
-          console.log("*******************: getallbids " + n + " is " + typeof value );
-          setBids([])
-        } else {       
-          setBids(value);
-        }
-      }
-    )
+    fetchBids();
     },
     [props.match.params],
   );
@@ -145,6 +149,9 @@ export function Auction(props) {
         (result) => {
           console.log(result);
           setCreateResult(result);
+          if(!result.hasOwnProperty("error_message")) {
+            fetchBids();
+          }
         }
       ).catch((err) => { setCreateResult({"error_message": "Input Error"} )})
     }
