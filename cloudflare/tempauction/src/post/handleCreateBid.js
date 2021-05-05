@@ -5,14 +5,17 @@ const faunadb = require('faunadb');
 const { Add, Create, Collection, Equals, Filter, Get, Index, Lambda, Let, Match, Max, Now, Paginate, Select, Var} = faunadb.query;
 const { validateEmail, validateBidAmount } = require('../utils.js');
 
+const { VALID_URL_SET } = require('../config.js');
+
 
 export async function handleCreateBid(request, fqlClient) {
 	const { headers } = request;
 	const contentType = headers.get("content-type") || "";
+	const origin = headers.get("origin") || "";
 	const init = {
 		headers: {
 			'content-type': 'application/json',
-			'Access-Control-Allow-Origin': 'http://localhost:3000',
+			'Access-Control-Allow-Origin': VALID_URL_SET.has(origin) ? origin : "localhost:3000",
 			'Access-Control-Allow-Methods': 'POST',
 			'Access-Control-Allow-Headers' : "Content-Type,Origin,Accept"
 		},

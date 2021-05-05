@@ -6,13 +6,16 @@ const {
 		Paginate, Select, Var
 	} = faunadb.query;
 
+const { VALID_URL_SET } = require('../config.js');
+
 
 export async function handleGetAllAuctions(request, fqlClient) {
 	const { headers } = request;
 	const contentType = headers.get("content-type") || "";
+	const origin = headers.get("origin") || "";
 	const init = {
 		headers: { 'Content-Type': 'application/json',
-		'Access-Control-Allow-Origin': 'http://localhost:3000',
+		'Access-Control-Allow-Origin': VALID_URL_SET.has(origin) ? origin : "localhost:3000",
 		'Access-Control-Allow-Methods': 'GET',
 		"Access-Control-Allow-Headers" : "Content-Type"
 		},
