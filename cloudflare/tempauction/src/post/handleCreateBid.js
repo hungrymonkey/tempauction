@@ -1,8 +1,13 @@
-const { GT, GTE, If, IsEmpty, ToInteger } = require('faunadb');
 
 const { handlePostBody } = require('./handlePostBody.js')
 const faunadb = require('faunadb');
-const { Add, Create, Collection, Equals, Filter, Get, Index, Lambda, Let, Match, Max, Now, Paginate, Select, Var} = faunadb.query;
+
+const { Add, Equals, Filter, Lambda, Match, Max, Paginate } = faunadb.query;
+const { Let, Select, Var} = faunadb.query;
+const { Collection, Create, Get, Index } = faunadb.query;
+const { Now, TimeDiff } = faunadb.query;
+const { GT, LT, If, IsEmpty, ToInteger } = faunadb.query;
+const { Format } = faunadb.query;
 const { validateEmail, validateBidAmount } = require('../utils.js');
 
 const { VALID_URL_SET } = require('../config.js');
@@ -49,9 +54,9 @@ export async function handleCreateBid(request, fqlClient) {
 			})
 			return new Response(body, init)
 		}
-
+		/*
 		try {
-			var auction_ref = await fqlClient.query(Get(Match(Index("auction_by_name"), "dummy")));
+			var auction_ref = await fqlClient.query(Get(Match(Index("auction_by_name"), args['auction'])));
 			console.log(auction_ref);
 		} catch (exception) {
 			console.log(exception)
@@ -63,7 +68,7 @@ export async function handleCreateBid(request, fqlClient) {
 				arguments: args
 			})
 			return new Response(body, init)
-		}
+		}*/
 		try {
 			let results = await fqlClient.query(
 				Let({
@@ -77,8 +82,8 @@ export async function handleCreateBid(request, fqlClient) {
 						  "Y",
 						  Let(
 							{ auctionRef: Select(1, Var("Y")) },
-							Equals(Select(["data", "name"], Get(Var("auctionRef"))), Var("auctionName"))
-						  )
+								Equals(Select(["data", "name"], Get(Var("auctionRef"))), Var("auctionName"))
+							)
 						)
 					  )
 					},
@@ -99,11 +104,12 @@ export async function handleCreateBid(request, fqlClient) {
 							  maxBid: Max(Var("allBids")),
 							  oldBidAmount: Select(["data", 0, 0], Var("maxBid")),
 							  bid: Get(Select(["data", 0, 2], Var("maxBid"))),
-							  bidIncrement: Select(["data","bid_increment"], Get(Select(["data", 0, 1], Var("maxBid"))))
+							  bidIncrement: Select(["data","bid_increment"], Get(Select(["data", 0, 1], Var("maxBid")))),
+							  auctionInfo: Get(Match(Index("auction_by_name"), args['auction']))
 							},
 							If(GT(Add(Var("oldBidAmount"), Var("bidIncrement")), Var("newBid")), { data: {
 								  error_message : "bid increment too small",
-								  minium_bid : Add(Var("oldBidAmount"), Var("bidIncrement")),
+								  minium_bid : Format("Old bid: %d, Min Bid: %d", Var("oldBidAmount"), Add(Var("oldBidAmount"), Var("bidIncrement"))),
 								  arguments: args,
 								  error_code : 510
 							  }},
@@ -114,18 +120,20 @@ export async function handleCreateBid(request, fqlClient) {
 								  }},
 								  If(GT(Select(["data", "timestamp"], Var("bid")), Now()),
 									  { data: {error_message : "bidder trying to move back in time", error_code:512 }},
-									  Create(Collection("bid"), {
-										  data: {
-											  email: Var("newEmail"),
-											  name: Var("newName"),
-											  amount: Var("newBid"),
-											  timestamp:  Now(),
-											  auctionRef: Select(
-												  "ref",
-												  Get(Match(Index("auction_by_name"), Var("auctionName")))
-											  )
-										  }
-									  })
+									  If(LT(Select(["data", "auction_end"], Var("auctionInfo")), Now()),
+									  	{ data:  {
+											  error_message : Format("Auction is over %d sec ago", TimeDiff(Select(["data", "auction_end"], Var("auctionInfo")), Now(), "seconds")), 
+											  error_code:513
+										}}, Create(Collection("bid"), {
+												data: {
+													email: Var("newEmail"),
+													name: Var("newName"),
+													amount: Var("newBid"),
+													timestamp:  Now(),
+													auctionRef: Select("ref", Var("auctionInfo"))
+												}
+											})
+									  )
 								  )
 								)
 							)
