@@ -105,11 +105,11 @@ export async function handleCreateBid(request, fqlClient) {
 							  oldBidAmount: Select(["data", 0, 0], Var("maxBid")),
 							  bid: Get(Select(["data", 0, 2], Var("maxBid"))),
 							  bidIncrement: Select(["data","bid_increment"], Get(Select(["data", 0, 1], Var("maxBid")))),
-							  auctionInfo: Get(Match(Index("auction_by_name"), args['auction']))
+							  auctionInfo: Get(Select(["data", 0, 1], Var("maxBid")))
 							},
 							If(GT(Add(Var("oldBidAmount"), Var("bidIncrement")), Var("newBid")), { data: {
 								  error_message : "bid increment too small",
-								  minium_bid : Format("Old bid: %d, Min Bid: %d", Var("oldBidAmount"), Add(Var("oldBidAmount"), Var("bidIncrement"))),
+								  minium_bid : Add(Var("oldBidAmount"), Var("bidIncrement")),
 								  arguments: args,
 								  error_code : 510
 							  }},
