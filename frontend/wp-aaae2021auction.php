@@ -19,4 +19,6 @@ function enqueue_scripts(){
       wp_enqueue_script('auction_widget', plugin_dir_url( __FILE__ ) . 'index.js', [], '1.0', true);         
    }           
 }
+add_action('wp_enqueue_scripts', 'enqueue_scripts');
 
+?>
