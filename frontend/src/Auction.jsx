@@ -12,8 +12,7 @@ import {
   useParams
 } from "react-router-dom";
 
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import { Card, CardContent, CardMedia, Grid, Paper } from '@material-ui/core';
 import { TextField, InputAdornment, Typography } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 
@@ -22,6 +21,9 @@ import { getAllBids } from './handlers/post/getAllBids';
 import { createBid } from './handlers/post/createBid';
 
 import BidTable from './component/BidTable';
+
+import "./utils/auctionAssetLoader";
+import auctionAssetLoader from "./utils/auctionAssetLoader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,6 +62,10 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  auctionDescriptionImage: {
+    with: "auto",
+    maxHeight: "700px"
+  },
 }));
 
 export function Auction(props) {
@@ -67,6 +73,7 @@ export function Auction(props) {
   const { match } = props;
   const { auctions, setTabIndex, tabIndex } = props;
   const [ bids, setBids ] = useState([]);
+  const [ auctionImage, setAuctionImage ] = useState(null);
   const history = useHistory();
 
   const [ emailField, setEmailField ] = useState("");
@@ -86,6 +93,7 @@ export function Auction(props) {
         for(let i = 0; i < auctions.length; i++){
           if(auctions[i]["data"]["name"] === match.params.id){
             found = true;
+            setAuctionImage(auctionAssetLoader(auctions[i]["data"]["name"]))
             console.log("****** matched")
             setTabIndex(i+1)
             break;
@@ -100,6 +108,7 @@ export function Auction(props) {
     let n = props.match.params.id
     getAllBids(n).then(
       (value) => {
+        setAuctionImage(auctionAssetLoader(n))
         if (typeof value === 'undefined') {
           console.log("*******************: getallbids " + n + " is " + typeof value );
           setBids([])
@@ -134,7 +143,7 @@ export function Auction(props) {
   var handleCreateBid = function(event) {
     let isEmailValid = validateEmail(emailField);
     let isBidNumber = !isNaN(bidField);
-    let isNameEmpty = nameField == "";
+    let isNameEmpty = nameField === "";
     let isNameString = typeof nameField === "string";
     if( isEmailValid && isBidNumber && !isNameEmpty && isNameString) {
       let b = Number.parseFloat(bidField) * 100;
@@ -174,12 +183,12 @@ export function Auction(props) {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-            <Grid container justify="center" spacing={3}>
+            <Grid container justify="center" direction="row" spacing={3}>
               <Grid key={"input-item-0"} item>
-                <Paper className={classes.paper} >
+                { auctionImage === null ? <Paper className={classes.paper} >
                   Product Placeholder
-                </Paper>
-                
+                </Paper> : <Card><CardMedia component="img" className={classes.auctionDescriptionImage} image={auctionImage} title="Auction Image"/></Card>
+                }
               </Grid>
               <Grid key={"input-paper-1"} item>
                 <Paper className={classes.paper} >

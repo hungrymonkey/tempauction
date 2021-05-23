@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Link as RouterLink, Switch, Route } from "react-router-dom";
-import logo from './logo.svg';
+import { BrowserRouter as Router, Link as RouterLink, Switch, Redirect, Route } from "react-router-dom";
+import logo from './aaae-logo-2021.svg';
 import './App.css';
 import Error from './404';
 
@@ -15,19 +15,14 @@ import Tab from '@material-ui/core/Tab';
 function Home() {
   return (
     <header className="App-header">
+      <div className="App-column">
           <img src={logo} className="App-logo" alt="logo" />
+          <span className="App-span"></span>
           <p>
-            Edit <code>src/App.js</code> and save to reload.
+            Welcome to the 2021 AAa/e Fundraiser
           </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        </div>
+    </header>
   );
 }
 
@@ -99,7 +94,7 @@ function App() {
                 <Auction auctions={auctionList} {...props} setTabIndex={setAuctionIndex} tabIndex={auctionIndex} /> 
               } />
               <Route path="*">
-                <Error/>
+                <Redirect to="/404" />
               </Route>
             </Switch>
           </div>
