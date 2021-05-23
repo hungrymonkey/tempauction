@@ -1,5 +1,5 @@
 
-import { json2formEncoded } from '../../utils';
+import json2formEncoded from '../../utils/json2formEncoded';
 
 export async function createBid(json) {
 

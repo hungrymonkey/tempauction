@@ -42,7 +42,3 @@ export function validateBidAmount(num) {
 	let n = Number.parseFloat(num)
 	return n > 0; 
 }
-
-export function json2formEncoded(json) {
-	return new URLSearchParams(Object.entries(json)).toString();
-}
