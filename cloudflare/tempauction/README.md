@@ -30,3 +30,6 @@ curl -X POST -d "auction=invaliddummy" http://127.0.0.1:8787/getmaxbid
 ```bash
 wrangler secret put FAUNA_SECRET
 ```
+
+### Production Vars
+`AUCTION_MODE` = { "dev", "aaae" }

@@ -25,7 +25,7 @@ export async function handleGetAllAuctions(request, fqlClient) {
 		let results = await fqlClient.query(
 			Map(
 				Paginate(
-					Match(Index("all_auctions"))
+					Match(Index("auction_by_mode"), AUCTION_MODE)
 				),
 				Lambda("X", 
 				  Merge(Get(Var("X")), 

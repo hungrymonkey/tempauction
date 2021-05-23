@@ -31,6 +31,14 @@ CreateIndex({
   unique: true
 })
 CreateIndex({
+  name:   "auction_by_mode",
+  source: Collection("auction"),
+  terms:  [{ field: [ "data", "mode" ] }],
+})
+```
+### Bid_index
+```
+CreateIndex({
   name: "bid_by_auctionRef",
   source: Collection("bid"),
   terms:  [{ field: [ "data", "auctionRef" ] }]
@@ -399,3 +407,14 @@ Let(
   )
 )
 ```
+7. Get Production Auction
+```
+Map(
+  Paginate(
+    Match(Index("auction_by_mode"), "dev"),
+  ),
+  Lambda("X", Get(Var("X")))
+)
+```
+
+
