@@ -1,3 +1,13 @@
+# This reactjs is embeddable with reactjs
+
+1. Create `widget` directory
+   - `mkdir widget`
+2. Create frontend build
+   - `yarn build`
+3. Compress `wp-aaae2021auction.php includes/* widget/` into wp-aaae2021auction.zip 
+4. Upload the zip into wordpress
+5. Add `[aaae-auction]` shortcode
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
