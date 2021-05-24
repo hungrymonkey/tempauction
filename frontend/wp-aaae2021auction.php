@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) or die( 'Direct script access diallowed.' );
 define( 'AAAE_AUCTION_WIDGET_PATH', plugin_dir_path( __FILE__ ) . 'widget' );
 define( 'AAAE_AUCTION_ASSET_MANIFEST', AAAE_AUCTION_WIDGET_PATH . '/build/asset-manifest.json' );
 define( 'AAAE_AUCTION_INCLUDES', plugin_dir_path( __FILE__ ) . '/includes' );
-define( 'AAAE_AUCTION_WIDGET_ENQUEUE_PATH', plugins_url("/widget/build/", __FILE__) );
+//define( 'AAAE_AUCTION_WIDGET_ENQUEUE_PATH', plugins_url("/widget/build/", __FILE__) );
 require_once( AAAE_AUCTION_INCLUDES . '/enqueue.php' );
 
 

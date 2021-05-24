@@ -12,7 +12,7 @@ add_action( 'init', function() {
 
   add_action( 'wp_enqueue_scripts', function() {
 	$asset_manifest = json_decode( file_get_contents( AAAE_AUCTION_ASSET_MANIFEST ), true )['files'];
-	$base_asset_url = AAAE_AUCTION_WIDGET_ENQUEUE_PATH;
+	$base_asset_url = get_site_url();
     if ( isset( $asset_manifest[ 'main.css' ] ) ) {
       wp_enqueue_style( 'aaae-auction', $base_asset_url . $asset_manifest[ 'main.css' ] );
     }
