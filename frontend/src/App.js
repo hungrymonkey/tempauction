@@ -77,7 +77,7 @@ function App() {
             <header style={headerStyles}>
               <AppBar position="static" color="transparent">
                <Tabs value={auctionIndex} aria-label="simple tabs example"  onChange={handleIndexChange}> 
-                  <Tab key={"tab-0"} label="Home" {...a11yProps(0)} component={RouterLink}  to="/" />
+                  <Tab key={"tab-0"} label="Home" {...a11yProps(0)} component={RouterLink}  to={ROOT_URL_PATH} />
                   {
                     hasAuctions ? 
                       renderTabs()
@@ -87,7 +87,7 @@ function App() {
               </AppBar>       
             </header> 
             <Switch>
-              <Route path={ROOT_URL_PATH}>
+              <Route exact path={ROOT_URL_PATH}>
                 <Home/>
               </Route>
               <Route path={ROOT_URL_PATH +'/404'}><Error/></Route>
