@@ -13,7 +13,16 @@ import Tab from '@material-ui/core/Tab';
 
 import { ROOT_URL_PATH } from './config';
 
-function Home() {
+function Home(props) {
+  const history = useHistory();
+  
+  useEffect(() => {
+    console.log(props);
+    if(props.auctionid !== undefined || props.auctionid === '') {
+      history.push("/auction/" + props.auctionid);
+    }
+  }, [])
+  
   return (
     <header className="App-header">
       <div className="App-column">
@@ -50,13 +59,8 @@ function a11yDummyProps(index) {
 function App(props) {
   const [auctionList, setAuctionList] = useState([]);
   const [auctionIndex, setAuctionIndex] = useState(0);
-  const history = useHistory();
 
   useEffect(() => {
-    console.log(props);
-    if(props.auctionid !== "") {
-      history.push("/auction/" + props.auctionid);
-    }
     fetchAllAuctions().then(
         (value) => { 
           setAuctionList(value)
@@ -94,7 +98,7 @@ function App(props) {
             </header> 
             <Switch>
               <Route exact path='/'>
-                <Home/>
+                <Home auctionid={props.auctionid} />
               </Route>
               <Route path='/404'><Error/></Route>
               <Route path='/auction/:id' render={(props) => 
@@ -113,7 +117,7 @@ function App(props) {
       </div>
     );
   }
-  return render({auctions: auctionList})
+  return render({auctions: auctionList, auctionid: props.auctionid})
 }
 
 
