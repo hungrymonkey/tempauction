@@ -64,7 +64,7 @@ function App() {
   var renderTabs = function() {
     return (
       auctionList.map((a, i) => (
-          <Tab key={"tab-"+(i+1)} label={a["data"]["name"]} {...a11yProps(i + 1)} component={RouterLink}  to={ROOT_URL_PATH + "/auction/"+a["data"]["name"]}/>
+          <Tab key={"tab-"+(i+1)} label={a["data"]["name"]} {...a11yProps(i + 1)} component={RouterLink}  to={"/auction/"+a["data"]["name"]}/>
         ))
     );
   }
@@ -72,12 +72,12 @@ function App() {
     let hasAuctions = auctionList.length > 0;
     return (
       <div className="App" >
-        <Router>
+        <Router basename={ROOT_URL_PATH}>
           <div>
             <header style={headerStyles}>
               <AppBar position="static" color="transparent">
                <Tabs value={auctionIndex} aria-label="simple tabs example"  onChange={handleIndexChange}> 
-                  <Tab key={"tab-0"} label="Home" {...a11yProps(0)} component={RouterLink}  to={ROOT_URL_PATH} />
+                  <Tab key={"tab-0"} label="Home" {...a11yProps(0)} component={RouterLink}  to="/" />
                   {
                     hasAuctions ? 
                       renderTabs()
@@ -87,11 +87,11 @@ function App() {
               </AppBar>       
             </header> 
             <Switch>
-              <Route exact path={ROOT_URL_PATH}>
+              <Route exact path='/'>
                 <Home/>
               </Route>
-              <Route path={ROOT_URL_PATH +'/404'}><Error/></Route>
-              <Route path={ROOT_URL_PATH + '/auction/:id'} render={(props) => 
+              <Route path='/404'><Error/></Route>
+              <Route path='/auction/:id' render={(props) => 
                 <Auction auctions={auctionList} {...props} setTabIndex={setAuctionIndex} tabIndex={auctionIndex} /> 
               } />
               {/* 
