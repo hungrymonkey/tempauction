@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Link as RouterLink, Switch, Redirect, Route } from "react-router-dom";
+import { BrowserRouter as Router, Link as RouterLink, Switch, Redirect, Route, useHistory } from "react-router-dom";
 import logo from './aaae-logo-2021.svg';
 import './App.css';
 import Error from './404';
@@ -13,7 +13,22 @@ import Tab from '@material-ui/core/Tab';
 
 import { ROOT_URL_PATH } from './config';
 
-function Home() {
+function Home(props) {
+  const history = useHistory();
+  useEffect(() => {
+    let auctions = props.auctions;
+    if(props.auctionid !== undefined || props.auctionid === '') {
+      if(auctions.length > 0) {
+        for(let i = 0; i < auctions.length; i++){
+          if(auctions[i]["data"]["name"] === props.auctionid){
+            history.push("/auction/" + props.auctionid);
+          }
+        }
+      }
+    }
+  },
+  [props.auctions])
+  
   return (
     <header className="App-header">
       <div className="App-column">
@@ -50,6 +65,7 @@ function a11yDummyProps(index) {
 function App(props) {
   const [auctionList, setAuctionList] = useState([]);
   const [auctionIndex, setAuctionIndex] = useState(0);
+
   useEffect(() => {
     fetchAllAuctions().then(
         (value) => { 
@@ -88,7 +104,7 @@ function App(props) {
             </header> 
             <Switch>
               <Route exact path='/'>
-                <Home/>
+                <Home auctionid={props.auctionid} auctions={auctionList}/>
               </Route>
               <Route path='/404'><Error/></Route>
               <Route path='/auction/:id' render={(props) => 
@@ -107,7 +123,7 @@ function App(props) {
       </div>
     );
   }
-  return render({auctions: auctionList})
+  return render({auctions: auctionList, auctionid: props.auctionid})
 }
 
 
