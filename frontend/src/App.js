@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Link as RouterLink, Switch, Redirect, Route } from "react-router-dom";
+import { BrowserRouter as Router, Link as RouterLink, Switch, Redirect, Route, useHistory } from "react-router-dom";
 import logo from './aaae-logo-2021.svg';
 import './App.css';
 import Error from './404';
@@ -50,7 +50,13 @@ function a11yDummyProps(index) {
 function App(props) {
   const [auctionList, setAuctionList] = useState([]);
   const [auctionIndex, setAuctionIndex] = useState(0);
+  const history = useHistory();
+
   useEffect(() => {
+    console.log(props);
+    if(props.auctionid !== "") {
+      history.push("/auction/" + props.auctionid);
+    }
     fetchAllAuctions().then(
         (value) => { 
           setAuctionList(value)
