@@ -26,7 +26,7 @@ function aaae_action_rewrite_route(){
     global $wp_rewrite;
     add_rewrite_rule(
         '^2021-silent-auction/auction/(.+?)/?$',
-        'index?pagename=2021-silent-auction&auctionid=$matches[1]','top');
+        'index.php?pagename=2021-silent-auction&auctionid=$matches[1]','top');
         $wp_rewrite->flush_rules();
 }
 add_action('init', 'aaae_action_rewrite_route');
@@ -34,10 +34,9 @@ add_action('init', 'aaae_action_rewrite_route');
 //https://codex.wordpress.org/Shortcode_API
 //https://developer.wordpress.org/reference/functions/shortcode_atts/
 function handle_shortcode( $atts ) {
-    $default_atts = array('auctionid' => '');
-    $args = shortcode_atts( $default_atts, $atts );
-    console.log(implode(",", $args));
-    return "<div id='aaae-auction-2021' auctionid={$args['auctionid']}></div>";
+    //$default_atts = array('auctionid' => '');
+    //$args = shortcode_atts( $default_atts, $atts );
+    return "<div id='aaae-auction-2021' auctionid={$_GET['auctionid']}></div>";
 }
 add_shortcode('aaae-auction', 'handle_shortcode');
 
