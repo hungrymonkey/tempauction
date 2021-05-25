@@ -9,7 +9,7 @@ const target = document.getElementById('aaae-auction-2021');
 if (target) {
   ReactDOM.render(
     <React.StrictMode>
-      <App />
+      <App auctionid={target.auctionid}/>
     </React.StrictMode>, target
   );
 }

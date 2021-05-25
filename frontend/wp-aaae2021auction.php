@@ -17,14 +17,20 @@ define( 'AAAE_AUCTION_INCLUDES', plugin_dir_path( __FILE__ ) . '/includes' );
 require_once( AAAE_AUCTION_INCLUDES . '/enqueue.php' );
 
 
-
-//https://developer.wordpress.org/reference/functions/add_rewrite_rule/
 /*
+//https://developer.wordpress.org/reference/functions/add_rewrite_rule/
+//https://wordpress.stackexchange.com/questions/231362/how-to-rewrite-the-url
+//https://wordpress.stackexchange.com/questions/141072/how-does-routing-on-wordpress-work/141087#141087
 function aaae_action_rewrite_route(){
-    add_rewrite_rule('^2021-silent-auction/(.+)?', ,'top')
-}*/
-//add_action('init', 'aaae_action_rewrite_route');
-
+    add_rewrite_rule(
+        global $wp_rewrite;
+        '^2021-silent-auction/auction/(.+?)/?$',
+        '2021-silent-auction/index.php?view=auction&id=$matches[1]','top');
+        $wp_rewrite->flush_rules();
+}
+add_action('init', 'aaae_action_rewrite_route');
+*/
+//https://codex.wordpress.org/Shortcode_API
 //https://developer.wordpress.org/reference/functions/shortcode_atts/
 function handle_shortcode( $atts ) {
     $default_atts = array();

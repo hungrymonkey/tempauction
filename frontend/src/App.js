@@ -47,7 +47,7 @@ function a11yDummyProps(index) {
 }
 
 
-function App() {
+function App(props) {
   const [auctionList, setAuctionList] = useState([]);
   const [auctionIndex, setAuctionIndex] = useState(0);
   useEffect(() => {
