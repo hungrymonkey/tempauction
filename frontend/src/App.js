@@ -15,13 +15,19 @@ import { ROOT_URL_PATH } from './config';
 
 function Home(props) {
   const history = useHistory();
-  
   useEffect(() => {
-    console.log(props);
+    let auctions = props.auctions;
     if(props.auctionid !== undefined || props.auctionid === '') {
-      history.push("/auction/" + props.auctionid);
+      if(auctions.length > 0) {
+        for(let i = 0; i < auctions.length; i++){
+          if(auctions[i]["data"]["name"] === props.auctionid){
+            history.push("/auction/" + props.auctionid);
+          }
+        }
+      }
     }
-  }, [])
+  },
+  [props.auctions])
   
   return (
     <header className="App-header">
@@ -98,7 +104,7 @@ function App(props) {
             </header> 
             <Switch>
               <Route exact path='/'>
-                <Home auctionid={props.auctionid} />
+                <Home auctionid={props.auctionid} auctions={auctionList}/>
               </Route>
               <Route path='/404'><Error/></Route>
               <Route path='/auction/:id' render={(props) => 
