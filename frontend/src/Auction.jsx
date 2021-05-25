@@ -22,7 +22,7 @@ import { createBid } from './handlers/post/createBid';
 
 import BidTable from './component/BidTable';
 
-import ROOT_URL_PATH from 'config';
+import { ROOT_URL_PATH } from './config';
 
 import "./utils/auctionAssetLoader";
 import auctionAssetLoader from "./utils/auctionAssetLoader";
