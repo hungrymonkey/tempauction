@@ -25,9 +25,9 @@ require_once( AAAE_AUCTION_INCLUDES . '/enqueue.php' );
 function aaae_action_rewrite_route(){
     global $wp_rewrite;
     add_rewrite_rule(
-        '^2021-silent-auction/auction/(.+?)/?$',
+        '2021-silent-auction/auction/(.+?)/?',
         'index.php?pagename=2021-silent-auction&auctionid=$matches[1]','top');
-        $wp_rewrite->flush_rules();
+    $wp_rewrite->flush_rules();
 }
 add_action('init', 'aaae_action_rewrite_route');
 
