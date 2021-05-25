@@ -9,6 +9,17 @@
 3. Compress `wp-aaae2021auction.php includes/* widget/` into wp-aaae2021auction.zip 
 4. Upload the zip into wordpress
 5. Add `[aaae-auction]` shortcode
+6. Modify .htaccess
+    ```
+    <IfModule mod_rewrite.c>
+    RewriteBase /
+    RewriteEngine On
+    RewriteRule ^2021-silent-auction/auction/(.+)/$ index.php?page_id=2&auctionid=$1
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.php [L]
+    </IfModule>
+    ```
 
 # Getting Started with Create React App
 
