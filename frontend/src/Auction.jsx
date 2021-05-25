@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   auctionDescriptionImage: {
-    with: "auto",
+    width: "auto",
     maxHeight: "700px"
   },
 }));
@@ -184,14 +184,14 @@ export function Auction(props) {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-            <Grid container justify="center" direction="row" spacing={3}>
-              <Grid key={"input-item-0"} item>
+            <Grid container justify="center" direction="row" spacing={3} alignItems="flex-start">
+              <Grid key={"input-item-0"} item xs={8}>
                 { auctionImage === null ? <Paper className={classes.paper} >
                   Product Placeholder
                 </Paper> : <Card><CardMedia component="img" className={classes.auctionDescriptionImage} image={auctionImage} title="Auction Image"/></Card>
                 }
               </Grid>
-              <Grid key={"input-paper-1"} item>
+              <Grid key={"input-paper-1"} item xs={4}>
                 <Paper className={classes.paper} >
                   <form className={classes.form} noValidate>
                     <Grid container direction="column" justify="center" spacing={2}>
