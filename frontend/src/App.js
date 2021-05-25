@@ -11,6 +11,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import ROOT_URL_PATH from 'config';
 
 function Home() {
   return (
@@ -63,7 +64,7 @@ function App() {
   var renderTabs = function() {
     return (
       auctionList.map((a, i) => (
-          <Tab key={"tab-"+(i+1)} label={a["data"]["name"]} {...a11yProps(i + 1)} component={RouterLink}  to={"/auction/"+a["data"]["name"]}/>
+          <Tab key={"tab-"+(i+1)} label={a["data"]["name"]} {...a11yProps(i + 1)} component={RouterLink}  to={ROOT_URL_PATH + "/"+a["data"]["name"]}/>
         ))
     );
   }
@@ -86,16 +87,18 @@ function App() {
               </AppBar>       
             </header> 
             <Switch>
-              <Route exact path='/'>
+              <Route path={ROOT_URL_PATH}>
                 <Home/>
               </Route>
-              <Route path='/404'><Error/></Route>
-              <Route path='/auction/:id' render={(props) => 
+              <Route path={ROOT_URL_PATH +'/404'}><Error/></Route>
+              <Route path={ROOT_URL_PATH + 'id'} render={(props) => 
                 <Auction auctions={auctionList} {...props} setTabIndex={setAuctionIndex} tabIndex={auctionIndex} /> 
               } />
+              {/* 
               <Route path="*">
                 <Redirect to="/404" />
               </Route>
+              */}
             </Switch>
           </div>
         </Router>

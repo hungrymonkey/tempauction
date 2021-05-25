@@ -22,8 +22,11 @@ import { createBid } from './handlers/post/createBid';
 
 import BidTable from './component/BidTable';
 
+import ROOT_URL_PATH from 'config';
+
 import "./utils/auctionAssetLoader";
 import auctionAssetLoader from "./utils/auctionAssetLoader";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,7 +102,7 @@ export function Auction(props) {
             break;
           }
         }
-        if(!found) {history.push("/404");}
+        if(!found) {history.push( ROOT_URL_PATH + "/404");}
       }
     },
     [props.auctions],
