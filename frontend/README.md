@@ -3,6 +3,8 @@
 1. Create `widget` directory
    - `mkdir widget`
 2. Create frontend build
+   - Add homepage key to `package.json`
+     + `"homepage": "/wp-content/plugins/wp-aaae2021auction/widget/build",`
    - `yarn build`
 3. Compress `wp-aaae2021auction.php includes/* widget/` into wp-aaae2021auction.zip 
 4. Upload the zip into wordpress
