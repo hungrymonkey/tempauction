@@ -6,7 +6,7 @@ import Error from './404';
 
 import { fetchAllAuctions } from './handlers/get/fetchallauctions.js';
 import { Auction } from './Auction';
-
+import { makeStyles } from '@material-ui/core/styles';
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -59,6 +59,27 @@ function a11yProps(index) {
 		'aria-controls': `simple-tabpanel-${index}`,
 	};
 }
+function a11yProps0() {
+	return {
+		id: `simple-tab-${0}`,
+		'aria-controls': `simple-tabpanel-${0}`,
+    flexGrow: 1
+	};
+}
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  rightAlign: {
+    marginLeft: 'auto',
+ }
+}));
 function a11yDummyProps(index) {
 	return {
 		id: `simple-dummy-tab-${index}`,
@@ -68,10 +89,11 @@ function a11yDummyProps(index) {
 
 
 function App(props) {
+  const classes = useStyles();
   const [auctionList, setAuctionList] = useState([]);
   const [auctionIndex, setAuctionIndex] = useState(0);
   const [anchorEl, setAnchorEl] = React.useState(null);
-	const matches = useMediaQuery('(min-width:767)');
+	const matches = useMediaQuery('(min-width:767px)');
   useEffect(() => {
     fetchAllAuctions().then(
         (value) => { 
@@ -97,12 +119,12 @@ function App(props) {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-  var renderMenu = function(idx) {
+  var renderMenu = function() {
 		return (
 			<div>
-				<IconButton onClick={handleClick} aria-controls="long-menu" aria-haspopup="true">
-					<MenuIcon/>
-				</IconButton>
+        <IconButton  onClick={handleClick} className={classes.rightAlign} aria-controls="long-menu" aria-haspopup="true">
+          <MenuIcon/>
+        </IconButton>
 				<Menu id="simple-menu"
 					anchorEl={anchorEl}
 					keepMounted
@@ -110,7 +132,7 @@ function App(props) {
 					onClose={handleClose}>
 					{
 						auctionList.map((a, i) => (
-							<MenuItem selected={ idx === i + 1} component={RouterLink} to={"/auction/"+a["data"]["name"]}>{a["data"]["name"]}</MenuItem>
+							<MenuItem component={RouterLink} to={"/auction/"+a["data"]["name"]}>{a["data"]["name"]}</MenuItem>
 						))
 					}
 				</Menu>
@@ -120,19 +142,24 @@ function App(props) {
 
   var render = function(props) {
     let hasAuctions = auctionList.length > 0;
-    let menuList = matches ? renderTabs() : renderMenu(auctionIndex);
+    let menuList = matches ? renderTabs() : renderMenu();
     return (
       <div className="App" >
         <Router basename={ROOT_URL_PATH}>
           <div>
             <header style={headerStyles}>
               <AppBar position="static" color="transparent">
+              
                <Tabs value={ matches ? auctionIndex : ''} aria-label="simple tabs example"  onChange={handleIndexChange}> 
-                  <Tab key={"tab-0"} label="Home" {...a11yProps(0)} component={RouterLink}  to="/" />
+               {
+                 matches ? <div/> : renderMenu()
+               }
+               <Tab key={"tab-0"} label="Home" {...a11yProps(0)} component={RouterLink}  to="/" />
+               {
+                 matches ? renderTabs() : <div></div>
+               }
                   {
-                    hasAuctions ? 
-                      menuList
-                    : <Tab key={"tab-dummy"} label="No Auctions Found" {...a11yDummyProps(1)} />
+                    hasAuctions ? <div></div> : <Tab key={"tab-dummy"} disabled label="No Auctions Found" {...a11yDummyProps(1)} />
                   }
                 </Tabs>
               </AppBar>       
@@ -143,7 +170,7 @@ function App(props) {
               </Route>
               <Route path='/404'><Error/></Route>
               <Route path='/auction/:id' render={(props) => 
-                <Auction auctions={auctionList} {...props} setTabIndex={setAuctionIndex} tabIndex={auctionIndex} /> 
+                <Auction auctions={auctionList} {...props} setTabIndex={handleIndexChange} tabIndex={auctionIndex} /> 
               } />
               {/* 
               <Route path="*">
