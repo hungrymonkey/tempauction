@@ -12,7 +12,7 @@ import {
   useParams
 } from "react-router-dom";
 
-import { Card, CardContent, CardMedia, Grid, Paper } from '@material-ui/core';
+import { Box, Card, CardContent, CardMedia, Grid, Paper } from '@material-ui/core';
 import { TextField, InputAdornment, Typography } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 
@@ -183,15 +183,9 @@ export function Auction(props) {
           <Typography>{ auctionFinished ?  "Auction End Time: " + formatLocalDate(endDateObj) : "Auction is over"}
           </Typography>
         </Grid>
-        <Grid item xs={12}>
-            <Grid container justify="center" direction="row" spacing={3} alignItems="flex-start">
-              <Grid key={"input-item-0"} item xs={8}>
-                { auctionImage === null ? <Paper className={classes.paper} >
-                  Product Placeholder
-                </Paper> : <Card><CardMedia component="img" className={classes.auctionDescriptionImage} image={auctionImage} title="Auction Image"/></Card>
-                }
-              </Grid>
-              <Grid key={"input-paper-1"} item xs={4}>
+        <Grid item xs={12} >
+            <Box container flexDirection="row" display="flex" justifyContent="center" flexWrap="wrap" spacing={3}> 
+              <Box key={"input-paper-1"} item xs={4}>
                 <Paper className={classes.paper} >
                   <form className={classes.form} noValidate>
                     <Grid container direction="column" justify="center" spacing={2}>
@@ -212,8 +206,14 @@ export function Auction(props) {
                     </Grid>
                   </form>
                 </Paper>
-              </Grid>
-          </Grid>
+              </Box>
+              <Box key={"input-item-0"} item xs={8}>
+                { auctionImage === null ? <Paper className={classes.paper} >
+                  Product Placeholder
+                </Paper> : <Card><CardMedia component="img" className={classes.auctionDescriptionImage} image={auctionImage} title="Auction Image"/></Card>
+                }
+              </Box>
+          </Box>
         </Grid>
         <Grid item xs={20}>
             { 
