@@ -11,6 +11,11 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import MenuIcon from '@material-ui/icons/Menu';
+import { IconButton, Menu, MenuItem } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+
 import { ROOT_URL_PATH } from './config';
 
 function Home(props) {
@@ -65,7 +70,8 @@ function a11yDummyProps(index) {
 function App(props) {
   const [auctionList, setAuctionList] = useState([]);
   const [auctionIndex, setAuctionIndex] = useState(0);
-
+  const [anchorEl, setAnchorEl] = React.useState(null);
+	const matches = useMediaQuery('(min-width:767)');
   useEffect(() => {
     fetchAllAuctions().then(
         (value) => { 
@@ -84,19 +90,48 @@ function App(props) {
         ))
     );
   }
+  const handleClick = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+	
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+  var renderMenu = function(idx) {
+		return (
+			<div>
+				<IconButton onClick={handleClick} aria-controls="long-menu" aria-haspopup="true">
+					<MenuIcon/>
+				</IconButton>
+				<Menu id="simple-menu"
+					anchorEl={anchorEl}
+					keepMounted
+					open={Boolean(anchorEl)}
+					onClose={handleClose}>
+					{
+						auctionList.map((a, i) => (
+							<MenuItem selected={ idx === i + 1} component={RouterLink} to={"/auction/"+a["data"]["name"]}>{a["data"]["name"]}</MenuItem>
+						))
+					}
+				</Menu>
+			</div>
+		);
+	}
+
   var render = function(props) {
     let hasAuctions = auctionList.length > 0;
+    let menuList = matches ? renderTabs() : renderMenu(auctionIndex);
     return (
       <div className="App" >
         <Router basename={ROOT_URL_PATH}>
           <div>
             <header style={headerStyles}>
               <AppBar position="static" color="transparent">
-               <Tabs value={auctionIndex} aria-label="simple tabs example"  onChange={handleIndexChange}> 
+               <Tabs value={ matches ? auctionIndex : ''} aria-label="simple tabs example"  onChange={handleIndexChange}> 
                   <Tab key={"tab-0"} label="Home" {...a11yProps(0)} component={RouterLink}  to="/" />
                   {
                     hasAuctions ? 
-                      renderTabs()
+                      menuList
                     : <Tab key={"tab-dummy"} label="No Auctions Found" {...a11yDummyProps(1)} />
                   }
                 </Tabs>
