@@ -63,9 +63,12 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  auctionImagePaper: {
+    width: "100%",
+    maxWidth: "500px",
+  },
   auctionDescriptionImage: {
     width: "100%",
-    maxHeight: "700px",
     'object-fit': "cover"
   },
 }));
@@ -211,7 +214,7 @@ export function Auction(props) {
               <Box key={"input-item-0"} item xs={8}>
                 { auctionImage === null ? <Paper className={classes.paper} >
                   Product Placeholder
-                </Paper> : <Card><CardMedia component="img" className={classes.auctionDescriptionImage} image={auctionImage} title="Auction Image"/></Card>
+                </Paper> : <Card className={classes.auctionImagePaper}><CardMedia component="img" className={classes.auctionDescriptionImage} image={auctionImage} title="Auction Image"/></Card>
                 }
               </Box>
           </Box>
