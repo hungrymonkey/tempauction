@@ -64,8 +64,9 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   auctionDescriptionImage: {
-    width: "auto",
-    maxHeight: "700px"
+    width: "100%",
+    maxHeight: "700px",
+    'object-fit': "cover"
   },
 }));
 
