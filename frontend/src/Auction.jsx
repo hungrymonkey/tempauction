@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
   auctionImagePaper: {
     width: "100%",
-    maxWidth: "500px",
+    maxWidth: "620px",
   },
   auctionDescriptionImage: {
     width: "100%",
