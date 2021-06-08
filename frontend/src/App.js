@@ -93,7 +93,7 @@ function App(props) {
   const [auctionList, setAuctionList] = useState([]);
   const [auctionIndex, setAuctionIndex] = useState(0);
   const [anchorEl, setAnchorEl] = React.useState(null);
-	const matches = useMediaQuery('(min-width:767px)');
+  const matches = useMediaQuery('(min-width:890px)');
   useEffect(() => {
     fetchAllAuctions().then(
         (value) => { 
